@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16.3)
+cmake_minimum_required(VERSION 3.10.2)
 
 project(DerivativeDungeon
 	LANGUAGES C
@@ -40,7 +40,7 @@ target_include_directories(${PROJECT_NAME}
 	PUBLIC "${VENDOR_DIR}/zlib-1.2.11"
 )
 
-target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc)
+#target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc)
 
 target_link_libraries(${PROJECT_NAME}
 	ncurses

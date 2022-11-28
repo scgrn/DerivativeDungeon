@@ -11,10 +11,9 @@ local KEY = {
 	F1 = 265,
 }
 
-local pos = {
-	x = 5,
-	y = 5
-}
+function init()
+  loadScript("../script/player.lua")
+end
 
 function drawScreen()
 	-- print(8, 8, "Generate")
@@ -35,9 +34,9 @@ function drawScreen()
 	print(4, 10, "Magic:")
 	print(4, 12, "Attack:")
 	
-	print(14, 8, "Lvl 3")
-	print(14, 10, "Lvl 1")
-	print(14, 12, "Lvl 2")
+	print(14, 8, "Lvl " .. player.lifeLevel)
+	print(14, 10, "Lvl " .. player.magicLevel)
+	print(14, 12, "Lvl " .. player.attackLevel)
 
 	print(23, 8, "24 / 32")
 	print(23, 10, "16 / 16")
@@ -64,27 +63,27 @@ function update()
 	local ch = getch()
 	
 	if (ch == KEY.UP) then
-		pos.y = pos.y - 1
-		if (pos.y < 0) then
-			pos.y = 10
+		player.pos.y = player.pos.y - 1
+		if (player.pos.y < 0) then
+			player.pos.y = 10
 		end
 	end
 	if (ch == KEY.DOWN) then
-		pos.y = pos.y + 1
-		if (pos.y > 10) then
-			pos.y = 0
+		player.pos.y = player.pos.y + 1
+		if (player.pos.y > 10) then
+			player.pos.y = 0
 		end
 	end
 	if (ch == KEY.LEFT) then
-		pos.x = pos.x - 1
-		if (pos.x < 0) then
-			pos.x = 10
+		player.pos.x = player.pos.x - 1
+		if (player.pos.x < 0) then
+			player.pos.x = 10
 		end
 	end
 	if (ch == KEY.RIGHT) then
-		pos.x = pos.x + 1
-		if (pos.x > 10) then
-			pos.x = 0
+		player.pos.x = player.pos.x + 1
+		if (player.pos.x > 10) then
+			player.pos.x = 0
 		end
 	end
 
