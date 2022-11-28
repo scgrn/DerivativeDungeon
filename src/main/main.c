@@ -142,7 +142,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	luaL_openlibs(luaVM);
-	lua_register(luaVM, "print", luaPrint);
+	lua_register(luaVM, "cprint", luaPrint);
 	lua_register(luaVM, "rectangle", luaRectangle);
 	lua_register(luaVM, "getch", luaGetch);
 	lua_register(luaVM, "quit", luaQuit);

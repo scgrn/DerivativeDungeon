@@ -1,18 +1,60 @@
 player = {
-  pos = {
-    x = 5,
-    y = 5
-  },
-  lifeLevel = 1,
-  magicLevel = 1,
-  attackLevel = 1,
+    pos = {
+        x = 5,
+        y = 5
+    },
 
-  hp = 8,
-  maxHp = 8,
+    lifeLevel = 1,
+    magicLevel = 1,
+    attackLevel = 1,
 
-  magic = 16,
-  maxMagic = 16,
+    hp = 64,
+    maxHp = 64,
 
-  exp = 0,
+    mp = 64,
+    maxMp = 64,
+
+    exp = 0,
+    nextLife = {50, 150, 400, 800, 1500, 2500, 4000},
+    nextMagic = {100, 300, 700, 1200, 2200, 3500, 6000},
+    nextAttack = {200, 500, 1000, 2000, 3000, 5000, 8000},
+
+    damageLevel = {8, 12, 16, 24, 32, 48, 64, 96},
+    
+    next = 50
 }
 
+function movePlayer(ch)
+    prevPos = {
+        x = player.pos.x,
+        y = player.pos.y
+    }
+    if (ch == KEY.UP) then
+        player.pos.y = player.pos.y - 1
+        if (player.pos.y < 0) then
+            player.pos.y = 10
+        end
+    end
+    if (ch == KEY.DOWN) then
+        player.pos.y = player.pos.y + 1
+        if (player.pos.y > 10) then
+            player.pos.y = 0
+        end
+    end
+    if (ch == KEY.LEFT) then
+        player.pos.x = player.pos.x - 1
+        if (player.pos.x < 0) then
+            player.pos.x = 10
+        end
+    end
+    if (ch == KEY.RIGHT) then
+        player.pos.x = player.pos.x + 1
+        if (player.pos.x > 10) then
+            player.pos.x = 0
+        end
+    end
+
+    if (room[player.pos.y][player.pos.x].solid) then
+        player.pos = prevPos
+    end
+end
