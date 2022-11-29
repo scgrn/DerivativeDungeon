@@ -3,10 +3,10 @@ KEY = {
     DOWN = 258,
     LEFT = 260,
     RIGHT = 261,
-    
+
     H = 104, --72,
     ENTER = 10,
-    
+
     ESC = 27,
     F1 = 265,
 }
@@ -14,8 +14,9 @@ KEY = {
 function init()
     loadScript("../script/generator.lua")
     loadScript("../script/player.lua")
-    
-    generateRoom()
+
+    generateDungeon()
+    generateRoom(1, 1)
 end
 
 function drawRoom()
@@ -47,7 +48,7 @@ function drawScreen()
     cprint(4, 8, "Life:")
     cprint(4, 10, "Magic:")
     cprint(4, 12, "Attack:")
-    
+
     cprint(14, 8, "Lvl " .. player.lifeLevel)
     cprint(14, 10, "Lvl " .. player.magicLevel)
     cprint(14, 12, "Lvl " .. player.attackLevel)
@@ -61,7 +62,7 @@ function drawScreen()
     cprint(4, 17, "Player defeated Enemy")
     cprint(4, 18, "Player EXP +10")
     cprint(4, 19, "")
-    
+
     rectangle(2, 21, 31, 23)
     cprint(4, 22, "Press [H] for help")
 
@@ -73,16 +74,16 @@ end
 
 function update()
     drawScreen()
-    
+
     local ch = getch()
     movePlayer(ch)
-    
+
     if (ch == KEY.F1) then
         loadScript("../script/main.lua")
         init()
         return
     end
-    
+
     if (ch == KEY.H) then
     end
 
