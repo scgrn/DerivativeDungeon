@@ -7,7 +7,7 @@ function generateDungeon()
     grid[y] = {}
     for x = 1, DUNGEON_WIDTH do
       grid[y][x] = {
-        n = true,
+        n = false,
         s = false,
         e = true,
         w = true,
@@ -51,7 +51,7 @@ function generateRoom(x, y)
    (e and 1 or 0) +
    (w and 1 or 0)
 
-  map_rect(0,0,32,31,0)
+  mapRect(0,0,10,10,0)
   if (n) then mapRect(4,0,6,5,false) end
   if (e) then mapRect(5,4,10,6,false) end
   if (s) then mapRect(4,5,6,10,false) end

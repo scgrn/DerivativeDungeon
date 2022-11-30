@@ -15,6 +15,8 @@ function init()
     loadScript("../script/generator.lua")
     loadScript("../script/player.lua")
 
+    io.write("Hello?")
+
     generateDungeon()
     generateRoom(1, 1)
 end
