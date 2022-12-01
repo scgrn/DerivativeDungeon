@@ -15,8 +15,6 @@ function init()
     loadScript("../script/generator.lua")
     loadScript("../script/player.lua")
 
-    io.write("Hello?")
-
     generateDungeon()
     generateRoom(1, 1)
 end
@@ -25,7 +23,7 @@ function drawRoom()
     for y = 0, 10 do
         for x = 0, 10 do
             if (room[y][x].solid) then
-                rectangle(x * 4 + 34, y * 2 + 2, x * 4 + 37, y * 2 + 3)
+                rectangle(x * 4 + 33, y * 2 + 1, x * 4 + 36, y * 2 + 2)
             else
                 cprint(x * 4 + 35, y * 2 + 2, ".")
             end
