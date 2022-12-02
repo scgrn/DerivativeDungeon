@@ -7,10 +7,10 @@ function generateDungeon()
     grid[y] = {}
     for x = 1, DUNGEON_WIDTH do
       grid[y][x] = {
-        n = false,
+        n = true,
         s = false,
         e = true,
-        w = true,
+        w = false,
         seed = 0
       }
     end
@@ -40,7 +40,7 @@ end
 function generateRoom(x, y)
   clearRoom()
 
-  --srand(grid[x][y].seed)
+  math.randomseed(grid[x][y].seed)
   local n = grid[x][y].n
   local s = grid[x][y].s
   local e = grid[x][y].e
@@ -52,8 +52,8 @@ function generateRoom(x, y)
    (w and 1 or 0)
 
   mapRect(0,0,10,10,0)
-  if (n) then mapRect(4,0,6,5,false) end
-  if (e) then mapRect(5,4,10,6,false) end
-  if (s) then mapRect(4,5,6,10,false) end
-  if (w) then mapRect(0,4,5,6,false) end
+  if (n) then mapRect(4,0,6,6,false) end
+  if (e) then mapRect(4,4,10,6,false) end
+  if (s) then mapRect(4,4,6,10,false) end
+  if (w) then mapRect(0,4,6,6,false) end
 end

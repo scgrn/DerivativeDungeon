@@ -12,11 +12,16 @@ KEY = {
 }
 
 function init()
-    loadScript("../script/generator.lua")
-    loadScript("../script/player.lua")
+  loadScript("../script/messageBox.lua")
+  loadScript("../script/generator.lua")
+  loadScript("../script/player.lua")
 
-    generateDungeon()
-    generateRoom(1, 1)
+  masterSeed = math.random()
+  rseed = masterSeed
+  math.randomseed(rseed)
+
+  generateDungeon()
+  generateRoom(1, 1)
 end
 
 function drawRoom()
@@ -74,6 +79,8 @@ end
 
 function update()
     drawScreen()
+    messageBox.update()
+    messageBox.render()
 
     local ch = getch()
     movePlayer(ch)
@@ -85,6 +92,12 @@ function update()
     end
 
     if (ch == KEY.H) then
+      messageBox.open({
+        "Retrieve the amulet!",
+        "",
+        "Use the arrow keys to move. To attack a",
+        "monster, just like, bump into it. Et cetera",
+      })
     end
 
     if (ch == KEY.ESC) then
