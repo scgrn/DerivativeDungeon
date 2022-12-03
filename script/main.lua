@@ -78,12 +78,19 @@ function drawScreen()
 end
 
 function update()
+    local ch = 0
+    animating = false
+
     drawScreen()
     messageBox.update()
     messageBox.render()
 
-    local ch = getch()
-    movePlayer(ch)
+    if (animating) then
+      delay(250);
+    else
+      ch = getch()
+      movePlayer(ch)
+    end
 
     if (ch == KEY.F1) then
         loadScript("../script/main.lua")
@@ -97,6 +104,8 @@ function update()
         "",
         "Use the arrow keys to move. To attack a",
         "monster, just like, bump into it. Et cetera",
+        "",
+        "Press any key"
       })
     end
 

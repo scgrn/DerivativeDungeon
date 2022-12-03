@@ -36,6 +36,7 @@ end
 
 function messageBox.update()
   if (messageBox.state == OPENING) then
+    animating = true
     if (messageBox.currentSize == messageBox.maxSize) then
       messageBox.state = OPEN
     else
@@ -45,26 +46,28 @@ function messageBox.update()
 end
 
 function messageBox.render()
-  local y1 = 12 - (messageBox.currentSize / 2)
-  local y2 = 12 + (messageBox.currentSize / 2)
+  if (messageBox.state ~= CLOSED) then
+    local y1 = 12 - (messageBox.currentSize / 2)
+    local y2 = 12 + (messageBox.currentSize / 2)
 
-  local s = " "
-  local width = messageBox.x2 - messageBox.x1
-  for i = 1, width - 1 do
-    s = s .. " "
-  end
+    local s = " "
+    local width = messageBox.x2 - messageBox.x1
+    for i = 1, width - 1 do
+      s = s .. " "
+    end
 
-  for y = y1, y2 do
-    cprint(messageBox.x1, y, s)
-  end
+    for y = y1, y2 do
+      cprint(messageBox.x1, y, s)
+    end
 
-  rectangle(messageBox.x1, y1, messageBox.x2, y2)
+    rectangle(messageBox.x1, y1, messageBox.x2, y2)
 
-  if (messageBox.state == OPEN) then
-    local y = y1 + 2
-    for k, v in pairs(messageBox.message) do
-        cprint(40 - (#v / 2), y, v)
-        y = y + 1
+    if (messageBox.state == OPEN) then
+      local y = y1 + 2
+      for k, v in pairs(messageBox.message) do
+          cprint(40 - (#v / 2), y, v)
+          y = y + 1
+      end
     end
   end
 end

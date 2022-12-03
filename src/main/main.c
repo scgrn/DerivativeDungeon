@@ -46,6 +46,13 @@ int luaGetch(lua_State* luaVM) {
 	return 1;
 }
 
+int luaDelay(lua_State* luaVM) {
+	int ms = (int)lua_tonumber(luaVM, 1);
+	usleep(ms * 100);
+
+	return 0;
+}
+
 int luaQuit(lua_State* luaVM) {
 	done = true;
 
@@ -146,6 +153,7 @@ int main(int argc, char* argv[]) {
 	lua_register(luaVM, "cprint", luaPrint);
 	lua_register(luaVM, "rectangle", luaRectangle);
 	lua_register(luaVM, "getch", luaGetch);
+	lua_register(luaVM, "delay", luaDelay);
 	lua_register(luaVM, "quit", luaQuit);
 	lua_register(luaVM, "loadScript", luaLoadScript);
 
