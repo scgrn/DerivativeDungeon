@@ -1,10 +1,14 @@
-local OPENING = 1
-local OPEN = 2
-local CLOSING = 3
-local CLOSED = 4
+local blankString
 
 messageBox = {
-  state = CLOSED,
+  States = {
+    OPENING = 1,
+    OPEN = 2,
+    CLOSING = 3,
+    CLOSED = 4
+  },
+
+  state = 4,
   message = {},
   maxSize = 0,
   currentSize = 0,
@@ -16,7 +20,7 @@ function messageBox.open(message)
   -- TODO: enfore message is table
 
   messageBox.message = message
-  messageBox.state = OPENING
+  messageBox.state = messageBox.States.OPENING
 
   messageBox.maxSize = #message + 3
   messageBox.currentSize = 0
@@ -28,41 +32,49 @@ function messageBox.open(message)
 
   messageBox.x1 = 40 - (longestMessage / 2)
   messageBox.x2 = 80 - messageBox.x1
+
+  blankString = " "
+  local width = messageBox.x2 - messageBox.x1
+  for i = 1, width - 1 do
+    blankString = blankString .. " "
+  end
 end
 
 function messageBox.close()
-  messageBox.state = CLOSING
+  messageBox.state = messageBox.States.CLOSING
 end
 
 function messageBox.update()
-  if (messageBox.state == OPENING) then
+  if (messageBox.state == messageBox.States.OPENING) then
     animating = true
     if (messageBox.currentSize == messageBox.maxSize) then
-      messageBox.state = OPEN
+      messageBox.state = messageBox.States.OPEN
     else
       messageBox.currentSize = messageBox.currentSize + 1
+    end
+  end
+
+  if (messageBox.state == messageBox.States.CLOSING) then
+    animating = true
+    if (messageBox.currentSize == 0) then
+      messageBox.state = messageBox.States.CLOSED
+    else
+      messageBox.currentSize = messageBox.currentSize - 1
     end
   end
 end
 
 function messageBox.render()
-  if (messageBox.state ~= CLOSED) then
+  if (messageBox.state ~= messageBox.States.CLOSED) then
     local y1 = 12 - (messageBox.currentSize / 2)
     local y2 = 12 + (messageBox.currentSize / 2)
 
-    local s = " "
-    local width = messageBox.x2 - messageBox.x1
-    for i = 1, width - 1 do
-      s = s .. " "
-    end
-
     for y = y1, y2 do
-      cprint(messageBox.x1, y, s)
+      cprint(messageBox.x1, y, blankString)
     end
-
     rectangle(messageBox.x1, y1, messageBox.x2, y2)
 
-    if (messageBox.state == OPEN) then
+    if (messageBox.state == messageBox.States.OPEN) then
       local y = y1 + 2
       for k, v in pairs(messageBox.message) do
           cprint(40 - (#v / 2), y, v)

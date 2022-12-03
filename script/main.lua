@@ -28,7 +28,7 @@ function drawRoom()
     for y = 0, 10 do
         for x = 0, 10 do
             if (room[y][x].solid) then
-                rectangle(x * 4 + 33, y * 2 + 1, x * 4 + 36, y * 2 + 2)
+                rectangle(x * 4 + 33, y * 2 + 1, x * 4 + 36, y * 2 + 3)
             else
                 cprint(x * 4 + 35, y * 2 + 2, ".")
             end
@@ -89,7 +89,12 @@ function update()
       delay(250);
     else
       ch = getch()
-      movePlayer(ch)
+      if (messageBox.state == messageBox.States.OPEN) then
+        ch = 0
+        messageBox.close()
+      else
+        movePlayer(ch)
+      end
     end
 
     if (ch == KEY.F1) then
@@ -107,6 +112,7 @@ function update()
         "",
         "Press any key"
       })
+      -- messageBox.open({"Found spellbook. Learn *LIFE* spell."})
     end
 
     if (ch == KEY.ESC) then

@@ -162,7 +162,7 @@ int main(int argc, char* argv[]) {
 
 	//  main loop
 	while (!done) {
-		clear();
+		erase();
 		if (luaErrorFlag) {
 			mvprintw(0, 0, luaErrorMsg);
 			refresh();

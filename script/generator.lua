@@ -8,9 +8,9 @@ function generateDungeon()
     for x = 1, DUNGEON_WIDTH do
       grid[y][x] = {
         n = true,
-        s = false,
+        s = true,
         e = true,
-        w = false,
+        w = true,
         seed = 0
       }
     end
