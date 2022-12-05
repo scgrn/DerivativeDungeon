@@ -21,7 +21,10 @@ player = {
 
     damageLevel = {8, 12, 16, 24, 32, 48, 64, 96},
 
-    next = 50
+    next = 50,
+    
+    roomX = 3,
+    roomY = 3
 }
 
 function movePlayer(ch)
@@ -32,24 +35,32 @@ function movePlayer(ch)
     if (ch == KEY.UP) then
         player.pos.y = player.pos.y - 1
         if (player.pos.y < 0) then
+            player.roomY = player.roomY - 1
+            generateRoom(player.roomX, player.roomY)
             player.pos.y = 10
         end
     end
     if (ch == KEY.DOWN) then
         player.pos.y = player.pos.y + 1
         if (player.pos.y > 10) then
+            player.roomY = player.roomY + 1
+            generateRoom(player.roomX, player.roomY)
             player.pos.y = 0
         end
     end
     if (ch == KEY.LEFT) then
         player.pos.x = player.pos.x - 1
         if (player.pos.x < 0) then
+            player.roomX = player.roomX - 1
+            generateRoom(player.roomX, player.roomY)
             player.pos.x = 10
         end
     end
     if (ch == KEY.RIGHT) then
         player.pos.x = player.pos.x + 1
         if (player.pos.x > 10) then
+            player.roomX = player.roomX + 1
+            generateRoom(player.roomX, player.roomY)
             player.pos.x = 0
         end
     end

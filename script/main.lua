@@ -12,28 +12,29 @@ KEY = {
 }
 
 function init()
-  loadScript("../script/messageBox.lua")
-  loadScript("../script/generator.lua")
-  loadScript("../script/player.lua")
+    loadScript("../script/messageBox.lua")
+    loadScript("../script/generator.lua")
+    loadScript("../script/player.lua")
 
-  masterSeed = math.random()
-  rseed = masterSeed
-  math.randomseed(rseed)
+    math.randomseed(os.time())
+    masterSeed = math.random(32767)
+    rseed = masterSeed
+    math.randomseed(rseed)
 
-  generateDungeon()
-  generateRoom(1, 1)
+    generateDungeon()
+    generateRoom(player.roomX, player.roomY)
 end
 
 function drawRoom()
-  for x = 0, 10 do
-    for y = 0, 10 do
-      if (room[x][y].solid) then
-        rectangle(x * 4 + 33, y * 2 + 1, x * 4 + 36, y * 2 + 3)
-      else
-        cprint(x * 4 + 35, y * 2 + 2, ".")
-      end
+    for x = 0, 10 do
+        for y = 0, 10 do
+            if (room[x][y].solid) then
+                rectangle(x * 4 + 33, y * 2 + 1, x * 4 + 36, y * 2 + 3)
+            else
+                cprint(x * 4 + 35, y * 2 + 2, ".")
+            end
+        end
     end
-  end
 end
 
 function drawScreen()
@@ -86,15 +87,15 @@ function update()
     messageBox.render()
 
     if (animating) then
-      delay(250);
+        delay(250);
     else
-      ch = getch()
-      if (messageBox.state == messageBox.States.OPEN) then
-        ch = 0
-        messageBox.close()
-      else
-        movePlayer(ch)
-      end
+        ch = getch()
+        if (messageBox.state == messageBox.States.OPEN) then
+            ch = 0
+            messageBox.close()
+        else
+            movePlayer(ch)
+        end
     end
 
     if (ch == KEY.F1) then
@@ -104,15 +105,15 @@ function update()
     end
 
     if (ch == KEY.H) then
-      messageBox.open({
-        "Retrieve the amulet!",
-        "",
-        "Use the arrow keys to move. To attack a",
-        "monster, just like, bump into it. Et cetera",
-        "",
-        "Press any key"
-      })
-      -- messageBox.open({"Found spellbook. Learn *LIFE* spell."})
+        messageBox.open({
+            "Retrieve the amulet!",
+            "",
+            "Use the arrow keys to move. To attack a",
+            "monster, just like, bump into it. Et cetera",
+            "",
+            "Press any key"
+        })
+        -- messageBox.open({"Found spellbook. Learn *LIFE* spell."})
     end
 
     if (ch == KEY.ESC) then
