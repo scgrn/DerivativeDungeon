@@ -25,15 +25,15 @@ function init()
 end
 
 function drawRoom()
+  for x = 0, 10 do
     for y = 0, 10 do
-        for x = 0, 10 do
-            if (room[y][x].solid) then
-                rectangle(x * 4 + 33, y * 2 + 1, x * 4 + 36, y * 2 + 3)
-            else
-                cprint(x * 4 + 35, y * 2 + 2, ".")
-            end
-        end
+      if (room[x][y].solid) then
+        rectangle(x * 4 + 33, y * 2 + 1, x * 4 + 36, y * 2 + 3)
+      else
+        cprint(x * 4 + 35, y * 2 + 2, ".")
+      end
     end
+  end
 end
 
 function drawScreen()

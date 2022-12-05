@@ -20,7 +20,7 @@ player = {
     nextAttack = {200, 500, 1000, 2000, 3000, 5000, 8000},
 
     damageLevel = {8, 12, 16, 24, 32, 48, 64, 96},
-    
+
     next = 50
 }
 
@@ -54,7 +54,7 @@ function movePlayer(ch)
         end
     end
 
-    if (room[player.pos.y][player.pos.x].solid) then
+    if (room[player.pos.x][player.pos.y].solid) then
         player.pos = prevPos
     end
 end

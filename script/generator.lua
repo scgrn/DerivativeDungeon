@@ -1,39 +1,88 @@
 DUNGEON_WIDTH = 5
 DUNGEON_HEIGHT = 5
 
+function visit(x, y)
+  grid[x][y].visited = true
+  grid[x][y].seed = math.random()
+
+  repeat
+    local potential={}
+    if (x > 1 and not grid[x-1][y].visited) then
+      table.insert(potential, {x - 1, y})
+    end
+    if (x < DUNGEON_WIDTH and not grid[x + 1][y].visited) then
+      table.insert(potential, {x + 1, y})
+    end
+    if (y > 1 and not grid[x][y - 1].visited) then
+      table.insert(potential, {x, y - 1})
+    end
+    if (y < DUNGEON_HEIGHT and not grid[x][y + 1].visited) then
+      table.insert(potential, {x, y + 1})
+    end
+
+    if (#potential > 0) then
+      local index = math.floor(math.random(#potential)) + 1
+      nx = potential[index][1]
+      ny = potential[index][2]
+
+      if (nx < x) then
+        grid[x][y].w = true
+        grid[nx][ny].e = true
+      end
+      if (nx > x) then
+        grid[x][y].e = true
+        grid[nx][ny].w = true
+      end
+      if (ny < y) then
+        grid[x][y].n = true
+        grid[nx][ny].s = true
+      end
+      if (ny > y) then
+        grid[x][y].s = true
+        grid[nx][ny].n = true
+      end
+
+      visit(nx, ny)
+    end
+  until (#potential == 0)
+end
+
 function generateDungeon()
   grid = {}
-  for y = 1, DUNGEON_HEIGHT do
-    grid[y] = {}
-    for x = 1, DUNGEON_WIDTH do
-      grid[y][x] = {
-        n = true,
-        s = true,
-        e = true,
-        w = true,
-        seed = 0
+  for x = 1, DUNGEON_WIDTH do
+    grid[x] = {}
+    for y = 1, DUNGEON_HEIGHT do
+      grid[x][y] = {
+        n = false,
+        s = false,
+        e = false,
+        w = false,
+        visited = false,
       }
     end
   end
+
+  visit(math.floor(math.random(DUNGEON_WIDTH)) + 1,
+    math.floor(math.random(DUNGEON_HEIGHT)) + 1)
 end
 
 function mapRect(x1, y1, x2, y2, v)
-  for y = y1, y2 do
-    for x = x1, x2 do
-      room[y][x].solid = v
+  for x = x1, x2 do
+    for y = y1, y2 do
+      room[x][y].solid = v
     end
   end
 end
 
 function clearRoom()
   room = {}
-  for y = 0, 10 do
-      room[y] = {}
-      for x = 0, 10 do
-          room[y][x] = {
-              solid = true
-          }
-      end
+  for x = 0, 10 do
+    room[x] = {}
+    for y = 0, 10 do
+      room[x][y] = {
+        solid = true
+      }
+    end
   end
 end
 

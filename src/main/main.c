@@ -157,8 +157,11 @@ int main(int argc, char* argv[]) {
 	lua_register(luaVM, "quit", luaQuit);
 	lua_register(luaVM, "loadScript", luaLoadScript);
 
+	//execute("print('Hello, world!\\n')");
 	execute("loadScript('../script/main.lua')");
-  execute("init()");
+	if (!luaErrorFlag) {
+  	execute("init()");
+	}
 
 	//  main loop
 	while (!done) {
