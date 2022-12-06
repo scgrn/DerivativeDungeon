@@ -3,7 +3,7 @@ DUNGEON_HEIGHT = 5
 
 function visit(x, y)
   grid[x][y].visited = true
-  grid[x][y].seed = math.random()
+  grid[x][y].seed = math.random(256 ^ 4)
 
   repeat
     local potential={}
@@ -48,48 +48,83 @@ function visit(x, y)
 end
 
 function generateDungeon()
-    grid = {}
-    for x = 1, DUNGEON_WIDTH do
-        grid[x] = {}
-        for y = 1, DUNGEON_HEIGHT do
-            grid[x][y] = {
-                n = false,
-                s = false,
-                e = false,
-                w = false,
-                visited = false,
-            }
-        end
-    end
-
-    visit(math.random(DUNGEON_WIDTH), math.random(DUNGEON_HEIGHT))
-
-    -- knock out random walls
-    local potential={}
-    for x = 1, DUNGEON_WIDTH - 1 do
-        for y = 1, DUNGEON_HEIGHT - 1 do
-            if (not grid[x][y].s) then
-                table.insert(potential, {x, y, 0})
-            end
-                
-            if (not grid[x][y].e) then
-                table.insert(potential,{x, y, 1})
+    repeat
+        local ok=true
+        
+        grid = {}
+        for x = 1, DUNGEON_WIDTH do
+            grid[x] = {}
+            for y = 1, DUNGEON_HEIGHT do
+                grid[x][y] = {
+                    n = false,
+                    s = false,
+                    e = false,
+                    w = false,
+                    visited = false,
+                }
             end
         end
-    end
 
-    for i=1,5 do
-        local index = math.random(#potential)
-        r = potential[index]
-        if (r[3] == 0) then
-            grid[r[1]][r[2]].s = true
-            grid[r[1]][r[2] + 1].n = true
+        -- build maze
+        visit(math.random(DUNGEON_WIDTH), math.random(DUNGEON_HEIGHT))
+
+        -- knock out random walls
+        local potential={}
+        for x = 1, DUNGEON_WIDTH - 1 do
+            for y = 1, DUNGEON_HEIGHT - 1 do
+                if (not grid[x][y].s) then
+                    table.insert(potential, {x, y, 0})
+                end
+                    
+                if (not grid[x][y].e) then
+                    table.insert(potential,{x, y, 1})
+                end
+            end
+        end
+
+        for i=1,5 do
+            local index = math.random(#potential)
+            r = potential[index]
+            if (r[3] == 0) then
+                grid[r[1]][r[2]].s = true
+                grid[r[1]][r[2] + 1].n = true
+            else
+                grid[r[1]][r[2]].e = true
+                grid[r[1] + 1][r[2]].w = true
+            end
+            table.remove(potential, index)
+        end
+        
+        -- find dead ends
+        potential={}
+        for x = 1, DUNGEON_WIDTH do
+            for y = 1, DUNGEON_HEIGHT do
+                local exits = (grid[x][y].n and 1 or 0)+
+                    (grid[x][y].s and 1 or 0) +
+                    (grid[x][y].e and 1 or 0) +
+                    (grid[x][y].w and 1 or 0)
+
+                if (exits == 1) then
+                    table.insert(potential, {x,y})
+                end
+            end
+        end
+        
+        -- regen if not enough dead ends
+        if (#potential < 3) then
+            ok = false
         else
-            grid[r[1]][r[2]].e = true
-            grid[r[1] + 1][r[2]].w = true
+            --[[
+            scramble(potential)
+
+            grid[potential[1][1] ][potential[1][2] ].flag=1
+            grid[potential[2][1] ][potential[2][2] ].flag=1
+            if (dungeon~=3) grid[potential[3][1] ][potential[3][2] ].flag=2
+            ]]
         end
-        table.remove(potential, index)
-    end
+    until ok
+
+    --reseed()
 end
 
 function mapRect(x1, y1, x2, y2, v)
@@ -131,4 +166,41 @@ function generateRoom(x, y)
     if (e) then mapRect(4,4,10,6,false) end
     if (s) then mapRect(4,4,6,10,false) end
     if (w) then mapRect(0,4,6,6,false) end
+
+    if (math.random() < 0.5) then
+        local xs = math.random(2, 4)
+        local ys = math.random(2, 4)
+        mapRect(5 - xs, 5 - ys, 5 + xs, 5 + ys)
+
+        -- pillars
+        if (math.random() < 0.5 or (xs == 4 and y2 == 4)) then
+            local xPillars = false
+            local yPillars = false
+            if (xs > 2) then
+                xPillars = true
+                xs = xs - 1
+            end
+            if (ys > 2) then
+                yPillars = true
+                ys = ys - 1
+            end
+            
+            if (xPillars and not yPillars) then
+                room[5 - xs][5].solid = true
+                room[5 + xs][5].solid = true
+            end
+            
+            if (yPillars and not xPillars) then
+                room[5][5 - ys].solid = true
+                room[5][5 + ys].solid = true
+            end
+            
+            if (xPillars and yPillars) then
+                room[5 - xs][5 - ys].solid = true
+                room[5 + xs][5 - ys].solid = true
+                room[5 - xs][5 + ys].solid = true
+                room[5 + xs][5 + ys].solid = true
+            end
+        end
+    end
 end

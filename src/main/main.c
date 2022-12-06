@@ -11,13 +11,22 @@ bool luaErrorFlag = false;
 char* luaErrorMsg;
 bool done = false;
 
-static int luaPrint(lua_State* luaVM) {
+static int luaPrintString(lua_State* luaVM) {
     int x = (int)lua_tonumber(luaVM, 1);
     int y = (int)lua_tonumber(luaVM, 2);
     const char *str = lua_tostring(luaVM, 3);
 
     mvprintw(y, x, str);
 
+    return 0;
+}
+
+static int luaPrintChar(lua_State* luaVM) {
+    int x = (int)lua_tonumber(luaVM, 1);
+    int y = (int)lua_tonumber(luaVM, 2);
+    int c = (int)lua_tonumber(luaVM, 3);
+    mvaddch(x, y, (char)c);
+    
     return 0;
 }
 
@@ -150,7 +159,8 @@ int main(int argc, char* argv[]) {
     }
 
     luaL_openlibs(luaVM);
-    lua_register(luaVM, "cprint", luaPrint);
+    lua_register(luaVM, "printString", luaPrintString);
+    lua_register(luaVM, "printChar", luaPrintChar);
     lua_register(luaVM, "rectangle", luaRectangle);
     lua_register(luaVM, "getch", luaGetch);
     lua_register(luaVM, "delay", luaDelay);
@@ -175,6 +185,7 @@ int main(int argc, char* argv[]) {
           execute("init()");
         } else {
             execute("update()");
+
             refresh();
         }
     }
