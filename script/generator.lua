@@ -60,16 +60,20 @@ function generateDungeon()
                     s = false,
                     e = false,
                     w = false,
+
+                    locked = {
+                        n = false,
+                        s = false,
+                        e = false,
+                        w = false,
+                    },
+                    
+                    -- for both generation and map filling in automap
                     visited = false,
                 }
             end
         end
-        --[[
-        grid[1][5].visited = true
-        grid[2][5].visited = true
-        grid[4][5].visited = true
-        grid[5][5].visited = true
-        ]]
+
         -- build maze
         visit(math.random(DUNGEON_WIDTH), math.random(DUNGEON_HEIGHT))
 
@@ -119,6 +123,7 @@ function generateDungeon()
         if (#potential < 3) then
             ok = false
         else
+            --  place items in dead ends
             --[[
             scramble(potential)
 
@@ -129,10 +134,15 @@ function generateDungeon()
         end
     until ok
 
+    grid[3][5].s = true
+    grid[3][5].locked.s = true
+
     --reseed()
 end
 
 function mapRect(x1, y1, x2, y2, v)
+    v = v or false
+    
     for x = x1, x2 do
         for y = y1, y2 do
             room[x][y].solid = v
@@ -166,6 +176,7 @@ function generateRoom(x, y)
         (e and 1 or 0) +
         (w and 1 or 0)
 
+    --  hallways
     mapRect(0,0,10,10,0)
     if (n) then mapRect(4,0,6,6,false) end
     if (e) then mapRect(4,4,10,6,false) end
@@ -175,6 +186,7 @@ function generateRoom(x, y)
     if (exits == 1) then
         mapRect(3, 3, 7, 7)
     else
+        --  carve out center
         if (math.random() < 0.5) then
             local xs = math.random(2, 4)
             local ys = math.random(2, 4)
@@ -182,32 +194,44 @@ function generateRoom(x, y)
 
             -- pillars
             if (math.random() < 0.5 or (xs == 4 and y2 == 4)) then
-                local xPillars = false
-                local yPillars = false
-                if (xs > 2) then
-                    xPillars = true
-                    xs = xs - 1
-                end
-                if (ys > 2) then
-                    yPillars = true
-                    ys = ys - 1
-                end
-                
-                if (xPillars and not yPillars) then
-                    room[5 - xs][5].solid = true
-                    room[5 + xs][5].solid = true
-                end
-                
-                if (yPillars and not xPillars) then
-                    room[5][5 - ys].solid = true
-                    room[5][5 + ys].solid = true
-                end
-                
-                if (xPillars and yPillars) then
-                    room[5 - xs][5 - ys].solid = true
-                    room[5 + xs][5 - ys].solid = true
-                    room[5 - xs][5 + ys].solid = true
-                    room[5 + xs][5 + ys].solid = true
+                if (math.random() < 0.5) then
+                    --  center pillar
+
+                    --  (as long as we're not in the first room)
+                    if (player.roomX ~= 3 or player.roomY ~= 5) then
+                        xs = math.random(1, xs - 1)
+                        ys = math.random(1, ys - 1)
+                        mapRect(5 - xs, 5 - ys, 5 + xs, 5 + ys, 1)
+                    end
+                else
+                    --  two or four pillars
+                    local xPillars = false
+                    local yPillars = false
+                    if (xs > 2) then
+                        xPillars = true
+                        xs = xs - 1
+                    end
+                    if (ys > 2) then
+                        yPillars = true
+                        ys = ys - 1
+                    end
+                    
+                    if (xPillars and not yPillars) then
+                        room[5 - xs][5].solid = true
+                        room[5 + xs][5].solid = true
+                    end
+                    
+                    if (yPillars and not xPillars) then
+                        room[5][5 - ys].solid = true
+                        room[5][5 + ys].solid = true
+                    end
+                    
+                    if (xPillars and yPillars) then
+                        room[5 - xs][5 - ys].solid = true
+                        room[5 + xs][5 - ys].solid = true
+                        room[5 - xs][5 + ys].solid = true
+                        room[5 + xs][5 + ys].solid = true
+                    end
                 end
             end
         end

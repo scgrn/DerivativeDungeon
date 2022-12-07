@@ -5,3 +5,5 @@ magic = {
     { name = "Deathspell", spellbook = "Tome of Decimation"},
     { name = "Teleport", spellbook = "Tome of Conveyance"}
 }
+
+

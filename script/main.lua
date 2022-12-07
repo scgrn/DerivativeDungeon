@@ -5,7 +5,10 @@ KEY = {
     RIGHT = 261,
 
     H = 104, --72,
+    I = 105,
     M = 109,
+    S = 115,
+    C = 99,
     ENTER = 10,
 
     ESC = 27,
@@ -36,8 +39,36 @@ function drawRoom()
             end
         end
     end
-    for x = 1, 10 do
---        printString(x + 49, 2, "#")
+    
+    --  draw gates
+    if (grid[player.roomX][player.roomY].locked.n) then
+        for x = 1, 10 do
+            printString(x + 49, 6, "#")
+        end
+    end
+
+    if (grid[player.roomX][player.roomY].locked.s) then
+        if (player.roomX == 3 and player.roomY == 5) then
+            for x = 1, 10 do
+                printString(x + 49, 22, "#")
+            end
+        else
+            for x = 1, 10 do
+                printString(x + 49, 18, "#")
+            end
+        end
+    end
+
+    if (grid[player.roomX][player.roomY].locked.w) then
+        for y = 1, 5 do
+            printString(43, y + 9, "#")
+        end
+    end
+
+    if (grid[player.roomX][player.roomY].locked.e) then
+        for y = 1, 5 do
+            printString(67, y + 9, "#")
+        end
     end
 end
 
@@ -113,12 +144,14 @@ function update()
         end
     end
 
+    --  hot reload
     if (ch == KEY.F1) then
         loadScript("../script/main.lua")
         init()
         return
     end
 
+    --  help message
     if (ch == KEY.H) then
         messageBox.open({
             "Retrieve the amulet!",
@@ -147,6 +180,7 @@ function update()
         -- messageBox.open({"Found spellbook. Learn *LIFE* spell."})
     end
     
+    --  draw map
     if (ch == KEY.M) then
         showingMap = true
         messageBox.open({
