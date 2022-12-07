@@ -24,7 +24,7 @@ player = {
     next = 50,
     
     roomX = 3,
-    roomY = 3
+    roomY = 5
 }
 
 function movePlayer(ch)

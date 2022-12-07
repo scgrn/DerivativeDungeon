@@ -97,6 +97,7 @@ function update()
                 rectangle(x * 6 + 20, y * 3 + 3, x * 6 + 22, y * 3 + 4)
             end
         end
+        printString(player.roomX * 6 + 21, player.roomY * 3 + 3, "@")
     end
 
     if (animating) then
@@ -127,18 +128,19 @@ function update()
             "",
             "Other commands:                    ",
             "",
-            "   s Open spellbook                ",
-            "   c Cast magic                    ",
-            "   m View map                      ",
-            "   esc Exit program                ",
+            "   [M] - View map                  ",
+            "   [I] - View inventory            ",
+            "   [S] - Open spellbook            ",
+            "   [C] - Cast magic                ",
+            -- "   [esc] Exit program              ",
             "",
             "Legend:                            ",
             "",
-            "   @ You              l Life bonus ",
-            "   B Bat              m Magic bonus",
-            "   O Orc              e EXP bonus  ",
-            "   Z Zombie           k Key        ",
-            "   W Wraith           s Spellbook  ",
+            "   @ - You          l - Life bonus ",
+            "   B - Bat          m - Magic bonus",
+            "   O - Orc          e - EXP bonus  ",
+            "   Z - Zombie       k - Key        ",
+            "   W - Wraith       s - Spellbook  ",
             "",
             "Press any key"
         })
