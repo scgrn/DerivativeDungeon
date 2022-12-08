@@ -39,7 +39,7 @@ function drawRoom()
             end
         end
     end
-    
+
     --  draw gates
     if (grid[player.roomX][player.roomY].locked.n) then
         for x = 1, 10 do
@@ -113,6 +113,67 @@ function drawScreen()
     printString(35 + player.pos.x * 4, player.pos.y * 2 + 2, "@")
 end
 
+function showHelp()
+  messageBox.open({
+      "Retrieve the amulet!",
+      "",
+      "Use the arrow keys to move. To attack",
+      "a monster, just like, bump into it.",
+      "",
+      "Other commands:                    ",
+      "",
+      "   [M] - View map                  ",
+      "   [I] - View inventory            ",
+      "   [S] - Open spellbook            ",
+      "   [C] - Cast magic                ",
+      -- "   [esc] Exit program              ",
+      "",
+      "Legend:                            ",
+      "",
+      "   @ - You          l - Life bonus ",
+      "   B - Bat          m - Magic bonus",
+      "   O - Orc          e - EXP bonus  ",
+      "   Z - Zombie       k - Key        ",
+      "   W - Wraith       s - Spellbook  ",
+      "",
+      "Press any key"
+  })
+  -- messageBox.open({"Found spellbook. Learn *LIFE* spell."})
+end
+
+function generateAutomap()
+  ret = {}
+  table.insert(ret, "Floor 1")
+  table.insert(ret, "")
+  for y = 1, 5 do
+    local s = "    "
+    for x = 1, 4 do
+      if (grid[x][y].e and (grid[x][y].visited or grid[x + 1][y].visited)) then
+        s = s .. "___   "
+      else
+        s = s .. "      "
+      end
+    end
+    s = s .. " "
+    table.insert(ret, s)
+    table.insert(ret, "")
+
+    if (y ~= 5) then
+      s = ""
+      for x = 1, 5 do
+        if (grid[x][y].s and (grid[x][y].visited or grid[x][y + 1].visited)) then
+          s = s .. "  |   "
+        else
+          s = s .. "      "
+        end
+      end
+      table.insert(ret, s)
+    end
+  end
+
+  return ret
+end
+
 function update()
     local ch = 0
     animating = false
@@ -120,12 +181,14 @@ function update()
     drawScreen()
     messageBox.update()
     messageBox.render()
-    
+
     -- draw map
     if (showingMap and messageBox.state == messageBox.States.OPEN) then
         for x = 1, DUNGEON_WIDTH do
             for y = 1, DUNGEON_HEIGHT do
-                rectangle(x * 6 + 20, y * 3 + 3, x * 6 + 22, y * 3 + 4)
+                if (grid[x][y].visited) then
+                  rectangle(x * 6 + 20, y * 3 + 3, x * 6 + 22, y * 3 + 4)
+                end
             end
         end
         printString(player.roomX * 6 + 21, player.roomY * 3 + 3, "@")
@@ -153,56 +216,15 @@ function update()
 
     --  help message
     if (ch == KEY.H) then
-        messageBox.open({
-            "Retrieve the amulet!",
-            "",
-            "Use the arrow keys to move. To attack",
-            "a monster, just like, bump into it.",
-            "",
-            "Other commands:                    ",
-            "",
-            "   [M] - View map                  ",
-            "   [I] - View inventory            ",
-            "   [S] - Open spellbook            ",
-            "   [C] - Cast magic                ",
-            -- "   [esc] Exit program              ",
-            "",
-            "Legend:                            ",
-            "",
-            "   @ - You          l - Life bonus ",
-            "   B - Bat          m - Magic bonus",
-            "   O - Orc          e - EXP bonus  ",
-            "   Z - Zombie       k - Key        ",
-            "   W - Wraith       s - Spellbook  ",
-            "",
-            "Press any key"
-        })
-        -- messageBox.open({"Found spellbook. Learn *LIFE* spell."})
+      showHelp()
     end
-    
+
     --  draw map
     if (ch == KEY.M) then
         showingMap = true
-        messageBox.open({
-            "Floor 1",
-            "",
-            "    ___   ___   ___   ___    ",
-            "",
-            "  |     |     |     |     |  ",
-            "    ___   ___   ___   ___    ",
-            "",
-            "  |     |     |     |     |  ",
-            "    ___   ___   ___   ___    ",
-            "",
-            "  |     |     |     |     |  ",
-            "    ___   ___   ___   ___    ",
-            "",
-            "  |     |     |     |     |  ",
-            "    ___   ___   ___   ___    ",
-            "",
-        })
+        messageBox.open(generateAutomap())
     end
-    
+
     if (ch == KEY.ESC) then
         quit()
     end

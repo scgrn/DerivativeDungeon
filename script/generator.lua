@@ -50,7 +50,7 @@ end
 function generateDungeon()
     repeat
         local ok=true
-        
+
         grid = {}
         for x = 1, DUNGEON_WIDTH do
             grid[x] = {}
@@ -67,7 +67,7 @@ function generateDungeon()
                         e = false,
                         w = false,
                     },
-                    
+
                     -- for both generation and map filling in automap
                     visited = false,
                 }
@@ -84,7 +84,7 @@ function generateDungeon()
                 if (not grid[x][y].s) then
                     table.insert(potential, {x, y, 0})
                 end
-                    
+
                 if (not grid[x][y].e) then
                     table.insert(potential,{x, y, 1})
                 end
@@ -103,7 +103,7 @@ function generateDungeon()
             end
             table.remove(potential, index)
         end
-        
+
         -- find dead ends
         potential={}
         for x = 1, DUNGEON_WIDTH do
@@ -113,12 +113,12 @@ function generateDungeon()
                     (grid[x][y].e and 1 or 0) +
                     (grid[x][y].w and 1 or 0)
 
-                if (exits == 1) then
+                if (exits == 1 and (x ~= 3 or y ~= 5)) then
                     table.insert(potential, {x,y})
                 end
             end
         end
-        
+
         -- regen if not enough dead ends
         if (#potential < 3) then
             ok = false
@@ -137,12 +137,18 @@ function generateDungeon()
     grid[3][5].s = true
     grid[3][5].locked.s = true
 
+    for x = 1, DUNGEON_WIDTH do
+      for y = 1, DUNGEON_HEIGHT do
+        grid[x][y].visited = false
+      end
+    end
+
     --reseed()
 end
 
 function mapRect(x1, y1, x2, y2, v)
     v = v or false
-    
+
     for x = x1, x2 do
         for y = y1, y2 do
             room[x][y].solid = v
@@ -163,6 +169,8 @@ function clearRoom()
 end
 
 function generateRoom(x, y)
+    grid[x][y].visited = true
+    
     clearRoom()
 
     math.randomseed(grid[x][y].seed)
@@ -182,7 +190,7 @@ function generateRoom(x, y)
     if (e) then mapRect(4,4,10,6,false) end
     if (s) then mapRect(4,4,6,10,false) end
     if (w) then mapRect(0,4,6,6,false) end
-    
+
     if (exits == 1) then
         mapRect(3, 3, 7, 7)
     else
@@ -215,17 +223,17 @@ function generateRoom(x, y)
                         yPillars = true
                         ys = ys - 1
                     end
-                    
+
                     if (xPillars and not yPillars) then
                         room[5 - xs][5].solid = true
                         room[5 + xs][5].solid = true
                     end
-                    
+
                     if (yPillars and not xPillars) then
                         room[5][5 - ys].solid = true
                         room[5][5 + ys].solid = true
                     end
-                    
+
                     if (xPillars and yPillars) then
                         room[5 - xs][5 - ys].solid = true
                         room[5 + xs][5 - ys].solid = true
