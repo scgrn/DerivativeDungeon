@@ -27,7 +27,7 @@ function openSpellbook()
         end
     end
 
-    local spellbook = {
+    local display = {
         "",
         "",
         "         ~ Spellbook ~         ",
@@ -35,21 +35,21 @@ function openSpellbook()
     }
     
     if (spellsLearned == 0) then
-        table.insert(spellbook, "   You haven't learned any spells yet   ")
+        table.insert(display, "   You haven't learned any spells yet   ")
     else
         for i = 1, #spells do
-            table.insert(spellbook, "")
+            table.insert(display, "")
             if (spells[i].learned) then
-                table.insert(spellbook, spells[i].name)
+                table.insert(display, spells[i].name)
             else
-                table.insert(spellbook, "- - - - -")
+                table.insert(display, "- - - - -")
             end
         end
     end
     
-    table.insert(spellbook, "")
-    table.insert(spellbook, "")
-    table.insert(spellbook, "")
+    table.insert(display, "")
+    table.insert(display, "")
+    table.insert(display, "")
     
-    messageBox.open(spellbook)
+    messageBox.open(display)
 end

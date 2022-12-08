@@ -20,6 +20,7 @@ function init()
     loadScript("../script/generator.lua")()
     loadScript("../script/player.lua")()
     loadScript("../script/magic.lua")()
+    loadScript("../script/inventory.lua")()
 
     math.randomseed(os.time())
     masterSeed = math.random(256 ^ 4)
@@ -219,6 +220,11 @@ function update()
         showHelp()
     end
     
+    -- show inventory
+    if (ch == KEY.I) then
+        showInventory()
+    end
+        
     --  open spellbook
     if (ch == KEY.S) then
         openSpellbook()
