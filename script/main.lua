@@ -16,9 +16,10 @@ KEY = {
 }
 
 function init()
-    loadScript("../script/messageBox.lua")
-    loadScript("../script/generator.lua")
-    loadScript("../script/player.lua")
+    loadScript("../script/messageBox.lua")()
+    loadScript("../script/generator.lua")()
+    loadScript("../script/player.lua")()
+    loadScript("../script/magic.lua")()
 
     math.randomseed(os.time())
     masterSeed = math.random(256 ^ 4)
@@ -125,8 +126,7 @@ function showHelp()
       "   [M] - View map                  ",
       "   [I] - View inventory            ",
       "   [S] - Open spellbook            ",
-      "   [C] - Cast magic                ",
-      -- "   [esc] Exit program              ",
+      "   [C] - Cast spell                ",
       "",
       "Legend:                            ",
       "",
@@ -143,7 +143,7 @@ end
 
 function generateAutomap()
   ret = {}
-  table.insert(ret, "Floor 1")
+  table.insert(ret, "               Floor 1               ")
   table.insert(ret, "")
   for y = 1, 5 do
     local s = "    "
@@ -216,7 +216,17 @@ function update()
 
     --  help message
     if (ch == KEY.H) then
-      showHelp()
+        showHelp()
+    end
+    
+    --  open spellbook
+    if (ch == KEY.S) then
+        openSpellbook()
+    end
+
+    --  cast spell
+    if (ch == KEY.C) then
+        castSpell()
     end
 
     --  draw map
