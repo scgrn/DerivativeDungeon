@@ -134,9 +134,15 @@ function generateDungeon()
         end
     until ok
 
+    --  entrance
+    grid[3][1].n = true
+    grid[3][1].locked.n = true
+
+    --  exit
     grid[3][5].s = true
     grid[3][5].locked.s = true
 
+    --  clear visited flags for automap
     for x = 1, DUNGEON_WIDTH do
       for y = 1, DUNGEON_HEIGHT do
         grid[x][y].visited = false

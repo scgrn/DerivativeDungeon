@@ -44,8 +44,14 @@ function drawRoom()
 
     --  draw gates
     if (grid[player.roomX][player.roomY].locked.n) then
-        for x = 1, 10 do
-            printString(x + 49, 6, "#")
+        if (player.roomX == 3 and player.roomY == 1) then
+            for x = 1, 10 do
+                printString(x + 49, 2, "#")
+            end
+        else
+            for x = 1, 10 do
+                printString(x + 49, 6, "#")
+            end
         end
     end
 
@@ -144,8 +150,13 @@ end
 
 function generateAutomap()
   ret = {}
-  table.insert(ret, "               Floor 1               ")
-  table.insert(ret, "")
+  table.insert(ret, "Floor 1                              ")
+  if (grid[3][1].visited) then
+    table.insert(ret, "|")
+  else
+    table.insert(ret, "")
+  end
+  
   for y = 1, 5 do
     local s = "    "
     for x = 1, 4 do
@@ -171,6 +182,7 @@ function generateAutomap()
       table.insert(ret, s)
     end
   end
+  table.insert(ret, "|")
 
   return ret
 end

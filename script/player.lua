@@ -35,9 +35,13 @@ function movePlayer(ch)
     if (ch == KEY.UP) then
         player.pos.y = player.pos.y - 1
         if (player.pos.y < 0) then
-            player.roomY = player.roomY - 1
-            generateRoom(player.roomX, player.roomY)
-            player.pos.y = 10
+            if (player.roomY > 1) then
+                player.roomY = player.roomY - 1
+                generateRoom(player.roomX, player.roomY)
+                player.pos.y = 10
+            else
+                player.pos.y = 0
+            end
         end
     end
     if (ch == KEY.DOWN) then
