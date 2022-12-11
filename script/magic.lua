@@ -29,7 +29,6 @@ function openSpellbook()
 
     local display = {
         "",
-        "",
         "         ~ Spellbook ~         ",
         "",
     }
@@ -45,10 +44,9 @@ function openSpellbook()
                 table.insert(display, "- - - - -")
             end
         end
+        table.insert(display, "")
     end
     
-    table.insert(display, "")
-    table.insert(display, "")
     table.insert(display, "")
     
     messageBox.open(display)

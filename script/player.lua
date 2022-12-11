@@ -43,9 +43,13 @@ function movePlayer(ch)
     if (ch == KEY.DOWN) then
         player.pos.y = player.pos.y + 1
         if (player.pos.y > 10) then
-            player.roomY = player.roomY + 1
-            generateRoom(player.roomX, player.roomY)
-            player.pos.y = 0
+            if (player.roomY < DUNGEON_HEIGHT) then
+                player.roomY = player.roomY + 1
+                generateRoom(player.roomX, player.roomY)
+                player.pos.y = 0
+            else
+                player.pos.y = 10
+            end
         end
     end
     if (ch == KEY.LEFT) then
