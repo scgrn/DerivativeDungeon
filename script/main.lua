@@ -21,6 +21,7 @@ function init()
     loadScript("../script/player.lua")()
     loadScript("../script/magic.lua")()
     loadScript("../script/inventory.lua")()
+    loadScript("../script/eventLog.lua")()
 
     math.randomseed(os.time())
     masterSeed = math.random(256 ^ 4)
@@ -29,6 +30,7 @@ function init()
 
     generateDungeon()
     generateRoom(player.roomX, player.roomY)
+    clearEventLog()
 end
 
 function drawRoom()
@@ -106,11 +108,7 @@ function drawScreen()
     printString(23, 10, player.mp .. " / " .. player.maxMp)
 
     rectangle(2, 14, 31, 20)
-    printString(4, 15, "Player HP -3")
-    printString(4, 16, "Enemy HP -3")
-    printString(4, 17, "Player defeated Enemy")
-    printString(4, 18, "Player EXP +10")
-    printString(4, 19, "")
+    drawEventLog()
 
     rectangle(2, 21, 31, 23)
     printString(4, 22, "Press [H] for help")
@@ -156,7 +154,7 @@ function generateAutomap()
   else
     table.insert(ret, "")
   end
-  
+
   for y = 1, 5 do
     local s = "    "
     for x = 1, 4 do
@@ -231,12 +229,12 @@ function update()
     if (ch == KEY.H) then
         showHelp()
     end
-    
+
     -- show inventory
     if (ch == KEY.I) then
         showInventory()
     end
-        
+
     --  open spellbook
     if (ch == KEY.S) then
         openSpellbook()
