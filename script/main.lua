@@ -242,7 +242,9 @@ function update()
 
     --  cast spell
     if (ch == KEY.C) then
-        castSpell()
+        -- castSpell()
+        loadScript("../script/main.lua")
+        init()
     end
 
     --  draw map

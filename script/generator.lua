@@ -1,5 +1,17 @@
+FLOORS = 8
+
 DUNGEON_WIDTH = 5
 DUNGEON_HEIGHT = 5
+
+function scramble(a)
+  for i = 1, #a do
+    index1 = math.random(#a)
+    index2 = math.random(#a)
+    local temp = a[index1]
+    a[index1] = a[index2]
+    a[index2] = temp
+  end
+end
 
 function visit(x, y)
   grid[x][y].visited = true
@@ -8,16 +20,24 @@ function visit(x, y)
   repeat
     local potential={}
     if (x > 1 and not grid[x-1][y].visited) then
-      table.insert(potential, {x - 1, y})
+      if (not grid[x-1][y].blocked) then
+        table.insert(potential, {x - 1, y})
+      end
     end
     if (x < DUNGEON_WIDTH and not grid[x + 1][y].visited) then
-      table.insert(potential, {x + 1, y})
+      if (not grid[x+1][y].blocked) then
+        table.insert(potential, {x + 1, y})
+      end
     end
     if (y > 1 and not grid[x][y - 1].visited) then
-      table.insert(potential, {x, y - 1})
+      if (not grid[x][y-1].blocked) then
+        table.insert(potential, {x, y - 1})
+      end
     end
     if (y < DUNGEON_HEIGHT and not grid[x][y + 1].visited) then
-      table.insert(potential, {x, y + 1})
+      if (not grid[x][y+1].blocked) then
+        table.insert(potential, {x, y + 1})
+      end
     end
 
     if (#potential > 0) then
@@ -49,7 +69,7 @@ end
 
 function generateDungeon()
     repeat
-        local ok=true
+        local okay = true
 
         grid = {}
         for x = 1, DUNGEON_WIDTH do
@@ -70,38 +90,107 @@ function generateDungeon()
 
                     -- for both generation and map filling in automap
                     visited = false,
+
+                    -- if true do not generate a room here
+                    blocked = false,
                 }
             end
         end
 
+        -- erode NW corner
+        if (math.random() < 0.5) then
+          grid[1][1].blocked = true
+          if (math.random() < 0.5) then
+            grid[2][2].blocked = true
+          end
+        end
+        if (math.random() < 0.5) then
+          grid[2][1].blocked = true
+        elseif (math.random() < 0.5) then
+          grid[1][2].blocked = true
+        end
+
+        -- erode NE corner
+        if (math.random() < 0.5) then
+          grid[5][1].blocked = true
+          if (math.random() < 0.5) then
+            grid[4][2].blocked = true
+          end
+        end
+        if (math.random() < 0.5) then
+          grid[4][1].blocked = true
+        elseif (math.random() < 0.5) then
+          grid[5][2].blocked = true
+        end
+
+        -- erode SW corner
+        if (math.random() < 0.5) then
+          grid[1][5].blocked = true
+          if (math.random() < 0.5) then
+            grid[2][4].blocked = true
+          end
+        end
+        if (math.random() < 0.5) then
+          grid[2][5].blocked = true
+        elseif (math.random() < 0.5) then
+          grid[1][4].blocked = true
+        end
+
+        -- erode SE corner
+        if (math.random() < 0.5) then
+          grid[5][5].blocked = true
+          if (math.random() < 0.5) then
+            grid[4][4].blocked = true
+          end
+        end
+        if (math.random() < 0.5) then
+          grid[4][5].blocked = true
+        elseif (math.random() < 0.5) then
+          grid[5][4].blocked = true
+        end
+
+        -- count rooms
+        totalRooms = 0
+        for x = 1, DUNGEON_WIDTH - 1 do
+          for y = 1, DUNGEON_HEIGHT - 1 do
+            if (not grid[x][y].blocked) then
+              totalRooms = totalRooms + 1
+            end
+          end
+        end
+
         -- build maze
-        visit(math.random(DUNGEON_WIDTH), math.random(DUNGEON_HEIGHT))
+        visit(math.floor(DUNGEON_WIDTH / 2), math.floor(DUNGEON_HEIGHT / 2))
 
         -- knock out random walls
         local potential={}
         for x = 1, DUNGEON_WIDTH - 1 do
             for y = 1, DUNGEON_HEIGHT - 1 do
-                if (not grid[x][y].s) then
-                    table.insert(potential, {x, y, 0})
-                end
+                if (not grid[x][y].blocked) then
+                  if (not grid[x][y].s and not grid[x][y + 1].blocked) then
+                      table.insert(potential, {x, y, 0})
+                  end
 
-                if (not grid[x][y].e) then
-                    table.insert(potential,{x, y, 1})
+                  if (not grid[x][y].e and not grid[x + 1][y].blocked) then
+                      table.insert(potential,{x, y, 1})
+                  end
                 end
             end
         end
 
-        for i=1,5 do
-            local index = math.random(#potential)
-            r = potential[index]
-            if (r[3] == 0) then
-                grid[r[1]][r[2]].s = true
-                grid[r[1]][r[2] + 1].n = true
-            else
-                grid[r[1]][r[2]].e = true
-                grid[r[1] + 1][r[2]].w = true
+        for i = 1, math.floor(totalRooms / 5) do
+            if (#potential >= 1) then
+              local index = math.random(#potential)
+              r = potential[index]
+              if (r[3] == 0) then
+                  grid[r[1] ][r[2] ].s = true
+                  grid[r[1] ][r[2] + 1].n = true
+              else
+                  grid[r[1] ][r[2] ].e = true
+                  grid[r[1] + 1][r[2] ].w = true
+              end
+              table.remove(potential, index)
             end
-            table.remove(potential, index)
         end
 
         -- find dead ends
@@ -121,18 +210,17 @@ function generateDungeon()
 
         -- regen if not enough dead ends
         if (#potential < 3) then
-            ok = false
+            okay = false
         else
             --  place items in dead ends
-            --[[
             scramble(potential)
-
+            --[[
             grid[potential[1][1] ][potential[1][2] ].flag=1
             grid[potential[2][1] ][potential[2][2] ].flag=1
             if (dungeon~=3) grid[potential[3][1] ][potential[3][2] ].flag=2
             ]]
         end
-    until ok
+    until okay
 
     --  entrance
     grid[3][1].n = true
@@ -145,7 +233,7 @@ function generateDungeon()
     --  clear visited flags for automap
     for x = 1, DUNGEON_WIDTH do
       for y = 1, DUNGEON_HEIGHT do
-        grid[x][y].visited = false
+        grid[x][y].visited = not grid[x][y].blocked
       end
     end
 
@@ -176,7 +264,7 @@ end
 
 function generateRoom(x, y)
     grid[x][y].visited = true
-    
+
     clearRoom()
 
     math.randomseed(grid[x][y].seed)
