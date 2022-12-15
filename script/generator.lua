@@ -13,6 +13,60 @@ function scramble(a)
   end
 end
 
+function erodeCorners()
+  -- erode NW corner
+  if (math.random() < 0.5) then
+    grid[1][1].blocked = true
+    if (math.random() < 0.5) then
+      grid[2][2].blocked = true
+    end
+  end
+  if (math.random() < 0.5) then
+    grid[2][1].blocked = true
+  elseif (math.random() < 0.5) then
+    grid[1][2].blocked = true
+  end
+
+  -- erode NE corner
+  if (math.random() < 0.5) then
+    grid[5][1].blocked = true
+    if (math.random() < 0.5) then
+      grid[4][2].blocked = true
+    end
+  end
+  if (math.random() < 0.5) then
+    grid[4][1].blocked = true
+  elseif (math.random() < 0.5) then
+    grid[5][2].blocked = true
+  end
+
+  -- erode SW corner
+  if (math.random() < 0.5) then
+    grid[1][5].blocked = true
+    if (math.random() < 0.5) then
+      grid[2][4].blocked = true
+    end
+  end
+  if (math.random() < 0.5) then
+    grid[2][5].blocked = true
+  elseif (math.random() < 0.5) then
+    grid[1][4].blocked = true
+  end
+
+  -- erode SE corner
+  if (math.random() < 0.5) then
+    grid[5][5].blocked = true
+    if (math.random() < 0.5) then
+      grid[4][4].blocked = true
+    end
+  end
+  if (math.random() < 0.5) then
+    grid[4][5].blocked = true
+  elseif (math.random() < 0.5) then
+    grid[5][4].blocked = true
+  end
+end
+
 function visit(x, y)
   grid[x][y].visited = true
   grid[x][y].seed = math.random(256 ^ 4)
@@ -97,57 +151,7 @@ function generateDungeon()
             end
         end
 
-        -- erode NW corner
-        if (math.random() < 0.5) then
-          grid[1][1].blocked = true
-          if (math.random() < 0.5) then
-            grid[2][2].blocked = true
-          end
-        end
-        if (math.random() < 0.5) then
-          grid[2][1].blocked = true
-        elseif (math.random() < 0.5) then
-          grid[1][2].blocked = true
-        end
-
-        -- erode NE corner
-        if (math.random() < 0.5) then
-          grid[5][1].blocked = true
-          if (math.random() < 0.5) then
-            grid[4][2].blocked = true
-          end
-        end
-        if (math.random() < 0.5) then
-          grid[4][1].blocked = true
-        elseif (math.random() < 0.5) then
-          grid[5][2].blocked = true
-        end
-
-        -- erode SW corner
-        if (math.random() < 0.5) then
-          grid[1][5].blocked = true
-          if (math.random() < 0.5) then
-            grid[2][4].blocked = true
-          end
-        end
-        if (math.random() < 0.5) then
-          grid[2][5].blocked = true
-        elseif (math.random() < 0.5) then
-          grid[1][4].blocked = true
-        end
-
-        -- erode SE corner
-        if (math.random() < 0.5) then
-          grid[5][5].blocked = true
-          if (math.random() < 0.5) then
-            grid[4][4].blocked = true
-          end
-        end
-        if (math.random() < 0.5) then
-          grid[4][5].blocked = true
-        elseif (math.random() < 0.5) then
-          grid[5][4].blocked = true
-        end
+        erodeCorners()
 
         -- count rooms
         totalRooms = 0
@@ -233,7 +237,7 @@ function generateDungeon()
     --  clear visited flags for automap
     for x = 1, DUNGEON_WIDTH do
       for y = 1, DUNGEON_HEIGHT do
-        grid[x][y].visited = not grid[x][y].blocked
+        grid[x][y].visited = false
       end
     end
 

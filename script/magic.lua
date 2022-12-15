@@ -32,7 +32,7 @@ function openSpellbook()
         "         ~ Spellbook ~         ",
         "",
     }
-    
+
     if (spellsLearned == 0) then
         table.insert(display, "   You haven't learned any spells yet   ")
     else
@@ -41,13 +41,13 @@ function openSpellbook()
             if (spells[i].learned) then
                 table.insert(display, spells[i].name)
             else
-                table.insert(display, "- - - - -")
+                table.insert(display, "--------")
             end
         end
         table.insert(display, "")
     end
-    
+
     table.insert(display, "")
-    
+
     messageBox.open(display)
 end
