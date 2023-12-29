@@ -1,7 +1,7 @@
 player = {
     pos = {
         x = 5,
-        y = 5
+        y = 8
     },
 
     lifeLevel = 1,
@@ -76,4 +76,6 @@ function movePlayer(ch)
     if (room[player.pos.x][player.pos.y].solid) then
         player.pos = prevPos
     end
+
+    findPath(player.pos)
 end

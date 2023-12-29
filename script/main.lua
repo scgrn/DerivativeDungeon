@@ -18,6 +18,7 @@ KEY = {
 function init()
     loadScript("../script/messageBox.lua")()
     loadScript("../script/generator.lua")()
+    loadScript("../script/pathFinder.lua")()
     loadScript("../script/player.lua")()
     loadScript("../script/magic.lua")()
     loadScript("../script/inventory.lua")()
@@ -28,9 +29,10 @@ function init()
     rseed = masterSeed
     math.randomseed(rseed)
 
+    clearEventLog()
     generateDungeon()
     generateRoom(player.roomX, player.roomY)
-    clearEventLog()
+    findPath(player.pos)
 end
 
 function drawRoom()
@@ -41,6 +43,7 @@ function drawRoom()
             else
                 printString(x * 4 + 35, y * 2 + 2, ".")
             end
+            -- printString(x * 4 + 35, y * 2 + 2, "" .. room[x][y].distance)
         end
     end
 
