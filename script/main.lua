@@ -9,6 +9,7 @@ KEY = {
     M = 109,
     S = 115,
     C = 99,
+    R = 114,
     ENTER = 10,
 
     ESC = 27,
@@ -20,6 +21,7 @@ function init()
     loadScript("../script/generator.lua")()
     loadScript("../script/pathFinder.lua")()
     loadScript("../script/player.lua")()
+    loadScript("../script/monsters.lua")()
     loadScript("../script/magic.lua")()
     loadScript("../script/inventory.lua")()
     loadScript("../script/eventLog.lua")()
@@ -33,6 +35,8 @@ function init()
     generateDungeon()
     generateRoom(player.roomX, player.roomY)
     findPath(player.pos)
+    
+    spawnMonster(5, 5, MONSTER_BAT)
 end
 
 function drawRoom()
@@ -119,6 +123,7 @@ function drawScreen()
     drawRoom()
     rectangle(33, 1, 77, 23)
 
+    drawMonsters()
     printString(35 + player.pos.x * 4, player.pos.y * 2 + 2, "@")
 end
 
@@ -140,8 +145,8 @@ function showHelp()
       "",
       "   @ - You          l - Life bonus ",
       "   B - Bat          m - Magic bonus",
-      "   O - Orc          e - EXP bonus  ",
-      "   Z - Zombie       k - Key        ",
+      "   Z - Zombie       e - EXP bonus  ",
+      "   O - Orc          k - Key        ",
       "   W - Wraith       s - Spellbook  ",
       "",
       "Press any key"
@@ -218,6 +223,7 @@ function update()
             showingMap = false
         else
             movePlayer(ch)
+            updateMonsters()
         end
     end
 
@@ -245,9 +251,7 @@ function update()
 
     --  cast spell
     if (ch == KEY.C) then
-        -- castSpell()
-        loadScript("../script/main.lua")
-        init()
+        castSpell()
     end
 
     --  draw map
@@ -256,6 +260,12 @@ function update()
         messageBox.open(generateAutomap())
     end
 
+    --  reload
+    if (ch == KEY.R) then
+        loadScript("../script/main.lua")
+        init()
+    end
+    
     if (ch == KEY.ESC) then
         quit()
     end
