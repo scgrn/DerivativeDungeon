@@ -4,121 +4,121 @@ DUNGEON_WIDTH = 5
 DUNGEON_HEIGHT = 5
 
 function scramble(a)
-  for i = 1, #a do
-    index1 = math.random(#a)
-    index2 = math.random(#a)
-    local temp = a[index1]
-    a[index1] = a[index2]
-    a[index2] = temp
-  end
+    for i = 1, #a do
+        index1 = math.random(#a)
+        index2 = math.random(#a)
+        local temp = a[index1]
+        a[index1] = a[index2]
+        a[index2] = temp
+    end
 end
 
 function erodeCorners()
-  -- erode NW corner
-  if (math.random() < 0.5) then
-    grid[1][1].blocked = true
+    -- erode NW corner
     if (math.random() < 0.5) then
-      grid[2][2].blocked = true
+        grid[1][1].blocked = true
+        if (math.random() < 0.5) then
+            grid[2][2].blocked = true
+        end
     end
-  end
-  if (math.random() < 0.5) then
-    grid[2][1].blocked = true
-  elseif (math.random() < 0.5) then
-    grid[1][2].blocked = true
-  end
+    if (math.random() < 0.5) then
+        grid[2][1].blocked = true
+    elseif (math.random() < 0.5) then
+        grid[1][2].blocked = true
+    end
 
-  -- erode NE corner
-  if (math.random() < 0.5) then
-    grid[5][1].blocked = true
+    -- erode NE corner
     if (math.random() < 0.5) then
-      grid[4][2].blocked = true
+        grid[5][1].blocked = true
+        if (math.random() < 0.5) then
+            grid[4][2].blocked = true
+        end
     end
-  end
-  if (math.random() < 0.5) then
-    grid[4][1].blocked = true
-  elseif (math.random() < 0.5) then
-    grid[5][2].blocked = true
-  end
+    if (math.random() < 0.5) then
+        grid[4][1].blocked = true
+    elseif (math.random() < 0.5) then
+        grid[5][2].blocked = true
+    end
 
-  -- erode SW corner
-  if (math.random() < 0.5) then
-    grid[1][5].blocked = true
+    -- erode SW corner
     if (math.random() < 0.5) then
-      grid[2][4].blocked = true
+        grid[1][5].blocked = true
+        if (math.random() < 0.5) then
+            grid[2][4].blocked = true
+        end
     end
-  end
-  if (math.random() < 0.5) then
-    grid[2][5].blocked = true
-  elseif (math.random() < 0.5) then
-    grid[1][4].blocked = true
-  end
+    if (math.random() < 0.5) then
+        grid[2][5].blocked = true
+    elseif (math.random() < 0.5) then
+        grid[1][4].blocked = true
+    end
 
-  -- erode SE corner
-  if (math.random() < 0.5) then
-    grid[5][5].blocked = true
+    -- erode SE corner
     if (math.random() < 0.5) then
-      grid[4][4].blocked = true
+        grid[5][5].blocked = true
+        if (math.random() < 0.5) then
+            grid[4][4].blocked = true
+        end
     end
-  end
-  if (math.random() < 0.5) then
-    grid[4][5].blocked = true
-  elseif (math.random() < 0.5) then
-    grid[5][4].blocked = true
-  end
+    if (math.random() < 0.5) then
+        grid[4][5].blocked = true
+    elseif (math.random() < 0.5) then
+        grid[5][4].blocked = true
+    end
 end
 
 function visit(x, y)
-  grid[x][y].visited = true
-  grid[x][y].seed = math.random(256 ^ 4)
+    grid[x][y].visited = true
+    grid[x][y].seed = math.random(256 ^ 4)
 
-  repeat
-    local potential={}
-    if (x > 1 and not grid[x-1][y].visited) then
-      if (not grid[x-1][y].blocked) then
-        table.insert(potential, {x - 1, y})
-      end
-    end
-    if (x < DUNGEON_WIDTH and not grid[x + 1][y].visited) then
-      if (not grid[x+1][y].blocked) then
-        table.insert(potential, {x + 1, y})
-      end
-    end
-    if (y > 1 and not grid[x][y - 1].visited) then
-      if (not grid[x][y-1].blocked) then
-        table.insert(potential, {x, y - 1})
-      end
-    end
-    if (y < DUNGEON_HEIGHT and not grid[x][y + 1].visited) then
-      if (not grid[x][y+1].blocked) then
-        table.insert(potential, {x, y + 1})
-      end
-    end
+    repeat
+        local potential={}
+        if (x > 1 and not grid[x-1][y].visited) then
+            if (not grid[x-1][y].blocked) then
+                table.insert(potential, {x - 1, y})
+            end
+        end
+        if (x < DUNGEON_WIDTH and not grid[x + 1][y].visited) then
+            if (not grid[x+1][y].blocked) then
+                table.insert(potential, {x + 1, y})
+            end
+        end
+        if (y > 1 and not grid[x][y - 1].visited) then
+            if (not grid[x][y-1].blocked) then
+                table.insert(potential, {x, y - 1})
+            end
+        end
+        if (y < DUNGEON_HEIGHT and not grid[x][y + 1].visited) then
+            if (not grid[x][y+1].blocked) then
+                table.insert(potential, {x, y + 1})
+            end
+        end
 
-    if (#potential > 0) then
-      local index = math.random(#potential)
-      nx = potential[index][1]
-      ny = potential[index][2]
+        if (#potential > 0) then
+            local index = math.random(#potential)
+            nx = potential[index][1]
+            ny = potential[index][2]
 
-      if (nx < x) then
-        grid[x][y].w = true
-        grid[nx][ny].e = true
-      end
-      if (nx > x) then
-        grid[x][y].e = true
-        grid[nx][ny].w = true
-      end
-      if (ny < y) then
-        grid[x][y].n = true
-        grid[nx][ny].s = true
-      end
-      if (ny > y) then
-        grid[x][y].s = true
-        grid[nx][ny].n = true
-      end
+            if (nx < x) then
+                grid[x][y].w = true
+                grid[nx][ny].e = true
+            end
+            if (nx > x) then
+                grid[x][y].e = true
+                grid[nx][ny].w = true
+            end
+            if (ny < y) then
+                grid[x][y].n = true
+                grid[nx][ny].s = true
+            end
+            if (ny > y) then
+                grid[x][y].s = true
+                grid[nx][ny].n = true
+            end
 
-      visit(nx, ny)
-    end
-  until (#potential == 0)
+            visit(nx, ny)
+        end
+    until (#potential == 0)
 end
 
 function generateDungeon()
@@ -167,7 +167,7 @@ function generateDungeon()
         visit(math.floor(DUNGEON_WIDTH / 2), math.floor(DUNGEON_HEIGHT / 2))
 
         -- knock out random walls
-        local potential={}
+        local potential = {}
         for x = 1, DUNGEON_WIDTH - 1 do
             for y = 1, DUNGEON_HEIGHT - 1 do
                 if (not grid[x][y].blocked) then
@@ -198,7 +198,7 @@ function generateDungeon()
         end
 
         -- find dead ends
-        potential={}
+        potential = {}
         for x = 1, DUNGEON_WIDTH do
             for y = 1, DUNGEON_HEIGHT do
                 local exits = (grid[x][y].n and 1 or 0)+
@@ -206,8 +206,8 @@ function generateDungeon()
                     (grid[x][y].e and 1 or 0) +
                     (grid[x][y].w and 1 or 0)
 
-                if (exits == 1 and (x ~= 3 or y ~= 5)) then
-                    table.insert(potential, {x,y})
+                if (exits == 1 and ((x ~= 3 or y ~= 5) and (x ~= 3 or y ~= 1))) then
+                    table.insert(potential, {x = x, y = y})
                 end
             end
         end
@@ -218,11 +218,24 @@ function generateDungeon()
         else
             --  place items in dead ends
             scramble(potential)
-            --[[
-            grid[potential[1][1] ][potential[1][2] ].flag=1
-            grid[potential[2][1] ][potential[2][2] ].flag=1
-            if (dungeon~=3) grid[potential[3][1] ][potential[3][2] ].flag=2
-            ]]
+            
+            -- lock test
+            for i = 1, #potential do
+                local x = potential[i].x
+                local y = potential[i].y
+                if (grid[x][y].n) then
+                    grid[x][y].locked.n = true
+                end
+                if (grid[x][y].s) then
+                    grid[x][y].locked.s = true
+                end
+                if (grid[x][y].e) then
+                    grid[x][y].locked.e = true
+                end
+                if (grid[x][y].w) then
+                    grid[x][y].locked.w = true
+                end
+            end
         end
     until okay
 
@@ -328,8 +341,10 @@ function generateRoom(x, y)
                     end
 
                     if (yPillars and not xPillars) then
-                        room[5][5 - ys].solid = true
-                        room[5][5 + ys].solid = true
+                        if (player.roomX ~= 3 or player.roomY ~= 5) then
+                            room[5][5 - ys].solid = true
+                            room[5][5 + ys].solid = true
+                        end
                     end
 
                     if (xPillars and yPillars) then

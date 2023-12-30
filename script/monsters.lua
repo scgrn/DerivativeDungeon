@@ -13,7 +13,8 @@ function spawnMonster(x, y, species)
     table.insert(monsters, {
         pos = {x = x, y = y},
         species = species,
-        aware = false
+        aware = false,
+        hp = 3
     })
 end
 
@@ -26,6 +27,11 @@ function updateMonsters()
     }
 
     for key, value in pairs(monsters) do
+        local prevPos = {
+            x = value.pos.x,
+            y = value.pos.y
+        }
+
         local bestDir = 0
         local lowestDistance = 1000
         
@@ -44,6 +50,12 @@ function updateMonsters()
         if (bestDir ~= 0) then
             value.pos.x = value.pos.x + offsets[bestDir].x
             value.pos.y = value.pos.y + offsets[bestDir].y
+        end
+        
+        if (value.pos.x == player.pos.x and value.pos.y == player.pos.y) then
+            value.pos = prevPos
+            player.hp = player.hp - 1
+            logEvent("The bat attacked you")
         end
     end
 end

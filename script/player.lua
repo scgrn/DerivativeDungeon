@@ -28,7 +28,7 @@ player = {
 }
 
 function movePlayer(ch)
-    prevPos = {
+    local prevPos = {
         x = player.pos.x,
         y = player.pos.y
     }
@@ -75,6 +75,20 @@ function movePlayer(ch)
 
     if (room[player.pos.x][player.pos.y].solid) then
         player.pos = prevPos
+    end
+
+    --  check monsters
+    for key, value in pairs(monsters) do
+        if (value.pos.x == player.pos.x and value.pos.y == player.pos.y) then
+            player.pos = prevPos
+            value.hp = value.hp - 1
+            if (value.hp == 0) then
+                table.remove(monsters, key)
+                logEvent("You defeated the bat!")
+            else
+                logEvent("You attacked the bat")
+            end
+        end
     end
 
     findPath(player.pos)

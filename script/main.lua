@@ -47,7 +47,7 @@ function drawRoom()
             else
                 printString(x * 4 + 35, y * 2 + 2, ".")
             end
-            -- printString(x * 4 + 35, y * 2 + 2, "" .. room[x][y].distance)
+            --printString(x * 4 + 35, y * 2 + 2, "" .. room[x][y].distance)
         end
     end
 
@@ -128,69 +128,69 @@ function drawScreen()
 end
 
 function showHelp()
-  messageBox.open({
-      "Retrieve the amulet!",
-      "",
-      "Use the arrow keys to move. To attack",
-      "a monster, just like, bump into it.",
-      "",
-      "Other commands:                    ",
-      "",
-      "   [M] - View map                  ",
-      "   [I] - View inventory            ",
-      "   [S] - Open spellbook            ",
-      "   [C] - Cast spell                ",
-      "",
-      "Legend:                            ",
-      "",
-      "   @ - You          l - Life bonus ",
-      "   B - Bat          m - Magic bonus",
-      "   Z - Zombie       e - EXP bonus  ",
-      "   O - Orc          k - Key        ",
-      "   W - Wraith       s - Spellbook  ",
-      "",
-      "Press any key"
-  })
-  -- messageBox.open({"Found spellbook. Learn *LIFE* spell."})
+    messageBox.open({
+        "Retrieve the amulet!",
+        "",
+        "Use the arrow keys to move. To attack",
+        "a monster, just like, bump into it.",
+        "",
+        "Other commands:                    ",
+        "",
+        "   [M] - View map                  ",
+        "   [I] - View inventory            ",
+        "   [S] - Open spellbook            ",
+        "   [C] - Cast spell                ",
+        "",
+        "Legend:                            ",
+        "",
+        "   @ - You          l - Life bonus ",
+        "   B - Bat          m - Magic bonus",
+        "   Z - Zombie       e - EXP bonus  ",
+        "   O - Orc          k - Key        ",
+        "   W - Wraith       s - Spellbook  ",
+        "",
+        "Press any key"
+    })
+    -- messageBox.open({"Found spellbook. Learn *LIFE* spell."})
 end
 
 function generateAutomap()
-  ret = {}
-  table.insert(ret, "Floor 1                              ")
-  if (grid[3][1].visited) then
-    table.insert(ret, "|")
-  else
-    table.insert(ret, "")
-  end
-
-  for y = 1, 5 do
-    local s = "    "
-    for x = 1, 4 do
-      if (grid[x][y].e and (grid[x][y].visited or grid[x + 1][y].visited)) then
-        s = s .. "___   "
-      else
-        s = s .. "      "
-      end
+    ret = {}
+    table.insert(ret, "Floor 1                              ")
+    if (grid[3][1].visited) then
+        table.insert(ret, "|")
+    else
+        table.insert(ret, "")
     end
-    s = s .. " "
-    table.insert(ret, s)
-    table.insert(ret, "")
 
-    if (y ~= 5) then
-      s = ""
-      for x = 1, 5 do
-        if (grid[x][y].s and (grid[x][y].visited or grid[x][y + 1].visited)) then
-          s = s .. "  |   "
-        else
-          s = s .. "      "
+    for y = 1, 5 do
+        local s = "    "
+        for x = 1, 4 do
+            if (grid[x][y].e and (grid[x][y].visited or grid[x + 1][y].visited)) then
+                s = s .. "___   "
+            else
+                s = s .. "      "
+            end
         end
-      end
-      table.insert(ret, s)
-    end
-  end
-  table.insert(ret, "|")
+        s = s .. " "
+        table.insert(ret, s)
+        table.insert(ret, "")
 
-  return ret
+        if (y ~= 5) then
+            s = ""
+            for x = 1, 5 do
+                if (grid[x][y].s and (grid[x][y].visited or grid[x][y + 1].visited)) then
+                    s = s .. "  |   "
+                else
+                    s = s .. "      "
+                end
+            end
+            table.insert(ret, s)
+        end
+    end
+    table.insert(ret, "|")
+
+    return ret
 end
 
 function update()
