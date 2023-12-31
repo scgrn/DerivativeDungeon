@@ -32,7 +32,7 @@ function movePlayer(ch)
         x = player.pos.x,
         y = player.pos.y
     }
-    if (ch == KEY.UP) then
+    if (tableContains(KEY.UP, ch)) then
         player.pos.y = player.pos.y - 1
         if (player.pos.y < 0) then
             if (player.roomY > 1) then
@@ -44,7 +44,7 @@ function movePlayer(ch)
             end
         end
     end
-    if (ch == KEY.DOWN) then
+    if (tableContains(KEY.DOWN, ch)) then
         player.pos.y = player.pos.y + 1
         if (player.pos.y > 10) then
             if (player.roomY < DUNGEON_HEIGHT) then
@@ -56,7 +56,7 @@ function movePlayer(ch)
             end
         end
     end
-    if (ch == KEY.LEFT) then
+    if (tableContains(KEY.LEFT, ch)) then
         player.pos.x = player.pos.x - 1
         if (player.pos.x < 0) then
             player.roomX = player.roomX - 1
@@ -64,7 +64,7 @@ function movePlayer(ch)
             player.pos.x = 10
         end
     end
-    if (ch == KEY.RIGHT) then
+    if (tableContains(KEY.RIGHT, ch)) then
         player.pos.x = player.pos.x + 1
         if (player.pos.x > 10) then
             player.roomX = player.roomX + 1
@@ -81,7 +81,6 @@ function movePlayer(ch)
     local sx = player.pos.x * 4 + 35
     local sy = player.pos.y * 2 + 2
     if (sx >= room.gateX1 and sx <= room.gateX2 and sy >= room.gateY1 and sy <= room.gateY2) then
-        
         player.pos = prevPos
         logEvent("Locked.")
     end

@@ -1,12 +1,13 @@
 KEY = {
-    UP = 259,
-    DOWN = 258,
-    LEFT = 260,
-    RIGHT = 261,
+    //  cursors / vim keybindings
+    UP = {259, 107},
+    DOWN = {258, 106},
+    LEFT = {260, 104},
+    RIGHT = {261, 108},
 
-    H = 104, --72,
-    I = 105,
+    HELP = 63,
     M = 109,
+    I = 105,
     S = 115,
     C = 99,
     R = 114,
@@ -15,6 +16,16 @@ KEY = {
     ESC = 27,
     F1 = 265,
 }
+
+function tableContains(table, value)
+    for i = 1, #table do
+        if (table[i] == value) then
+            return true
+        end
+    end
+    
+    return false
+end
 
 function init()
     loadScript("../script/messageBox.lua")()
@@ -90,7 +101,7 @@ function drawScreen()
     drawEventLog()
 
     rectangle(2, 21, 31, 23)
-    printString(4, 22, "Press [H] for help")
+    printString(4, 22, "Press [?] for help")
 
     drawRoom()
     rectangle(33, 1, 77, 23)
@@ -189,6 +200,7 @@ function update()
         delay(50);
     else
         ch = getch()
+        -- logEvent("Scancode: " .. ch)
         if (messageBox.state == messageBox.States.OPEN) then
             ch = 0
             messageBox.close()
@@ -207,7 +219,7 @@ function update()
     end
 
     --  help message
-    if (ch == KEY.H) then
+    if (ch == KEY.HELP) then
         showHelp()
     end
 
@@ -232,7 +244,7 @@ function update()
         messageBox.open(generateAutomap())
     end
 
-    --  reload
+    --  user reload
     if (ch == KEY.R) then
         loadScript("../script/main.lua")
         init()
