@@ -262,6 +262,25 @@ function update()
             "Press any key"
         })
     end
+    
+    if (ch == KEY.V) then
+        messageBox.open({
+            "Current random seed:",
+            "",
+            "80A9 45E2"
+        })
+    end
+
+    if (ch == KEY.E) then
+        messageBox.open({
+            "Enter random seed:",
+            "(this will start a new game)",
+            "",
+            "---- ----",
+            "",
+            "Press Enter to accept or Esc to cancel"
+        })
+    end
 
     if (tableContains(KEY.Q, ch)) then
         quit()
