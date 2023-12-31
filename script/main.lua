@@ -52,39 +52,11 @@ function drawRoom()
     end
 
     --  draw gates
-    if (grid[player.roomX][player.roomY].locked.n) then
-        if (player.roomX == 3 and player.roomY == 1) then
-            for x = 1, 10 do
-                printString(x + 49, 2, "#")
+    if (room.gateX1 ~= 0) then
+        for x = room.gateX1, room.gateX2 do
+            for y = room.gateY1, room.gateY2 do
+                printString(x, y, "#")
             end
-        else
-            for x = 1, 10 do
-                printString(x + 49, 6, "#")
-            end
-        end
-    end
-
-    if (grid[player.roomX][player.roomY].locked.s) then
-        if (player.roomX == 3 and player.roomY == 5) then
-            for x = 1, 10 do
-                printString(x + 49, 22, "#")
-            end
-        else
-            for x = 1, 10 do
-                printString(x + 49, 18, "#")
-            end
-        end
-    end
-
-    if (grid[player.roomX][player.roomY].locked.w) then
-        for y = 1, 5 do
-            printString(43, y + 9, "#")
-        end
-    end
-
-    if (grid[player.roomX][player.roomY].locked.e) then
-        for y = 1, 5 do
-            printString(67, y + 9, "#")
         end
     end
 end
@@ -134,20 +106,20 @@ function showHelp()
         "Use the arrow keys to move. To attack",
         "a monster, just like, bump into it.",
         "",
-        "Other commands:                    ",
+        "Other commands:                         ",
         "",
-        "   [M] - View map                  ",
-        "   [I] - View inventory            ",
-        "   [S] - Open spellbook            ",
-        "   [C] - Cast spell                ",
+        "   [M] - View map                       ",
+        "   [I] - View inventory                 ",
+        "   [S] - Open spellbook                 ",
+        "   [C] - Cast spell                     ",
         "",
-        "Legend:                            ",
+        "Legend:                                 ",
         "",
-        "   @ - You          l - Life bonus ",
-        "   B - Bat          m - Magic bonus",
-        "   Z - Zombie       e - EXP bonus  ",
-        "   O - Orc          k - Key        ",
-        "   W - Wraith       s - Spellbook  ",
+        "   @ - You               l - Life bonus ",
+        "   B - Bat               m - Magic bonus",
+        "   Z - Zombie            e - EXP bonus  ",
+        "   S - Skeleton Archer   k - Key        ",
+        "   W - Wraith            s - Spellbook  ",
         "",
         "Press any key"
     })

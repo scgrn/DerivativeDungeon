@@ -77,6 +77,15 @@ function movePlayer(ch)
         player.pos = prevPos
     end
 
+    --  check gates
+    local sx = player.pos.x * 4 + 35
+    local sy = player.pos.y * 2 + 2
+    if (sx >= room.gateX1 and sx <= room.gateX2 and sy >= room.gateY1 and sy <= room.gateY2) then
+        
+        player.pos = prevPos
+        logEvent("Locked.")
+    end
+    
     --  check monsters
     for key, value in pairs(monsters) do
         if (value.pos.x == player.pos.x and value.pos.y == player.pos.y) then

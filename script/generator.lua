@@ -220,6 +220,7 @@ function generateDungeon()
             scramble(potential)
             
             -- lock test
+            --[[
             for i = 1, #potential do
                 local x = potential[i].x
                 local y = potential[i].y
@@ -236,6 +237,7 @@ function generateDungeon()
                     grid[x][y].locked.w = true
                 end
             end
+            ]]
         end
     until okay
 
@@ -277,6 +279,10 @@ function clearRoom()
             }
         end
     end
+    room.gateX1 = 0
+    room.gateY1 = 0
+    room.gateX2 = 0
+    room.gateY2 = 0
 end
 
 function generateRoom(x, y)
@@ -356,5 +362,44 @@ function generateRoom(x, y)
                 end
             end
         end
+    end
+    
+    --  add gates
+    if (grid[x][y].locked.n) then
+        room.gateX1 = 50
+        room.gateX2 = 59
+        if (y == 1) then
+            room.gateY1 = 2
+            room.gateY2 = 2
+        else
+            room.gateY1 = 6
+            room.gateY2 = 6
+        end
+    end
+
+    if (grid[x][y].locked.s) then
+        room.gateX1 = 50
+        room.gateX2 = 59
+        if (y == 5) then
+            room.gateY1 = 22
+            room.gateY2 = 22
+        else
+            room.gateY1 = 18
+            room.gateY2 = 18
+        end
+    end
+
+    if (grid[x][y].locked.e) then
+        room.gateX1 = 67
+        room.gateX2 = 67
+        room.gateY1 = 10
+        room.gateY2 = 14
+    end
+
+    if (grid[x][y].locked.w) then
+        room.gateX1 = 43
+        room.gateX2 = 43
+        room.gateY1 = 10
+        room.gateY2 = 14
     end
 end
