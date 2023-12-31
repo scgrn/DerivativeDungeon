@@ -31,6 +31,7 @@ function tableContains(table, value)
 end
 
 function init()
+    loadScript("../script/buildstamp.lua")()
     loadScript("../script/messageBox.lua")()
     loadScript("../script/generator.lua")()
     loadScript("../script/pathFinder.lua")()
@@ -51,6 +52,8 @@ function init()
     findPath(player.pos)
     
     spawnMonster(5, 5, MONSTER_BAT)
+
+    logEvent("Retrieve the Amulet!")
 end
 
 function drawRoom()
@@ -115,8 +118,6 @@ end
 
 function showHelp()
     messageBox.open({
-        "Retrieve the amulet!",
-        "",
         "Use the arrow keys to move. To attack",
         "a monster, just like, bump into it.",
         "",
@@ -253,7 +254,7 @@ function update()
             "(c) Copyright 2024 Andrew Krause",
             "alienbug.games",
             "",
-            "Buildstamp: ",
+            "Buildstamp: " .. buildstamp,
             "",
             "Source available at:",
             "  https://github.com/scgrn/DerivativeDungeon  ",
