@@ -10,11 +10,14 @@ KEY = {
     I = 105,
     S = 115,
     C = 99,
+    
     R = 114,
+    E = 101,
+    V = 118,
+    A = 97,
+    Q = {27, 113},
+    
     ENTER = 10,
-
-    ESC = 27,
-    F1 = 265,
 }
 
 function tableContains(table, value)
@@ -211,13 +214,6 @@ function update()
         end
     end
 
-    --  hot reload
-    if (ch == KEY.F1) then
-        loadScript("../script/main.lua")
-        init()
-        return
-    end
-
     --  help message
     if (ch == KEY.HELP) then
         showHelp()
@@ -249,8 +245,25 @@ function update()
         loadScript("../script/main.lua")
         init()
     end
-    
-    if (ch == KEY.ESC) then
+
+    if (ch == KEY.A) then
+        messageBox.open({
+            "Derivative Dungeon",
+            "",
+            "(c) Copyright 2024 Andrew Krause",
+            "alienbug.games",
+            "",
+            "Buildstamp: ",
+            "",
+            "Source available at:",
+            "  https://github.com/scgrn/DerivativeDungeon  ",
+            "",
+            "Press any key"
+        })
+    end
+
+    if (tableContains(KEY.Q, ch)) then
         quit()
     end
 end
+
