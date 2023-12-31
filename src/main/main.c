@@ -11,6 +11,19 @@ bool luaErrorFlag = false;
 char* luaErrorMsg;
 bool done = false;
 
+void startCurses() {
+    //  initialize ncurses
+    initscr();
+    noecho();
+    cbreak();
+    curs_set(0);
+    keypad(stdscr, TRUE);
+}
+
+void killCurses() {
+    endwin();
+}
+
 static int luaPrintString(lua_State* luaVM) {
     int x = (int)lua_tonumber(luaVM, 1);
     int y = (int)lua_tonumber(luaVM, 2);
@@ -69,6 +82,8 @@ int luaQuit(lua_State* luaVM) {
 }
 
 static int traceback(lua_State *luaVM) {
+    killCurses();
+    
     if (!lua_isstring(luaVM, 1)) { /* 'message' not a string? */
         return 1;  /* keep it intact */
     }
@@ -96,7 +111,8 @@ void execute(const char* command) {
             luaErrorMsg = lua_tostring(luaVM, -1);
             lua_pop(luaVM, 2);
 
-            printf("Lua Error: %s\n", luaErrorMsg);
+            killCurses();
+            printf("Lua error from calling execute(): %s\n", luaErrorMsg);
 
             luaErrorFlag = true;
         }
@@ -121,7 +137,8 @@ static int luaLoadScript(lua_State* luaVM) {
             const char* errorMsg = lua_tostring(luaVM, -1);
             lua_pop(luaVM, 1);
 
-            printf("Lua Error: %s\n", luaErrorMsg);
+            killCurses();
+            printf("Lua error from loading script: %s\n", luaErrorMsg);
        }
 
         lua_pushvalue(luaVM, -1);
@@ -130,25 +147,22 @@ static int luaLoadScript(lua_State* luaVM) {
             luaErrorMsg = lua_tostring(luaVM, -1);
             lua_pop(luaVM, 1);
 
-            printf("Lua Error: %s\n", luaErrorMsg);
+            killCurses();
+            printf("Lua error from executing script on load: %s\n", luaErrorMsg);
         }
 
         free(buffer);
     } else {
-        printf("Lua Error: %s\n", filename);
+        killCurses();
+        printf("Lua error from file load: %s\n", filename);
     }
 
     return 1;
 }
 
 int main(int argc, char* argv[]) {
-    //  initialize ncurses
-    initscr();
-    noecho();
-    cbreak();
-    curs_set(0);
-    keypad(stdscr, TRUE);
-
+    startCurses();
+    
     //  initialize lua
     luaVM = luaL_newstate();
     if (!luaVM) {
@@ -167,10 +181,9 @@ int main(int argc, char* argv[]) {
     lua_register(luaVM, "quit", luaQuit);
     lua_register(luaVM, "loadScript", luaLoadScript);
 
-    //execute("print('Hello, world!\\n')");
     execute("loadScript('../script/main.lua')");
     if (!luaErrorFlag) {
-      execute("init()");
+        execute("init()");
     }
 
     //  main loop
@@ -182,7 +195,7 @@ int main(int argc, char* argv[]) {
             getch();
             luaErrorFlag = false;
             execute("loadScript('../script/main.lua')");
-          execute("init()");
+            execute("init()");
         } else {
             execute("update()");
 
@@ -196,7 +209,7 @@ int main(int argc, char* argv[]) {
         luaVM = 0;
     }
 
-    endwin();
-
+    killCurses();
+    
     return 0;
 }
