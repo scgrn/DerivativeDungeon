@@ -80,9 +80,12 @@ function movePlayer(ch)
     --  check gates
     local sx = player.pos.x * 4 + 35
     local sy = player.pos.y * 2 + 2
-    if (sx >= room.gateX1 and sx <= room.gateX2 and sy >= room.gateY1 and sy <= room.gateY2) then
+    if (sx >= room.gate.x1 and sx <= room.gate.x2 and sy >= room.gate.y1 and sy <= room.gate.y2) then
         player.pos = prevPos
-        logEvent("Locked.")
+        if (not room.gate.messageShown) then
+            logEvent("Locked.")
+            room.gate.messageShown = true
+        end
     end
     
     --  check monsters

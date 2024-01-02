@@ -275,14 +275,18 @@ function clearRoom()
         room[x] = {}
         for y = 0, 10 do
             room[x][y] = {
-                solid = true
+                solid = true,
+                tile = 6
             }
         end
     end
-    room.gateX1 = 0
-    room.gateY1 = 0
-    room.gateX2 = 0
-    room.gateY2 = 0
+    room.gate = {
+        x1 = 0,
+        y1 = 0,
+        x2 = 0,
+        y2 = 0,
+        messageShown = false
+    }
 end
 
 function generateRoom(x, y)
@@ -364,42 +368,76 @@ function generateRoom(x, y)
         end
     end
     
+    room.gate = {
+        x1 = 0,
+        y1 = 0,
+        x2 = 0,
+        y2 = 0,
+        messageShown = false
+    }
+    
     --  add gates
     if (grid[x][y].locked.n) then
-        room.gateX1 = 50
-        room.gateX2 = 59
+        room.gate.x1 = 50
+        room.gate.x2 = 59
         if (y == 1) then
-            room.gateY1 = 2
-            room.gateY2 = 2
+            room.gate.y1 = 2
+            room.gate.y2 = 2
         else
-            room.gateY1 = 6
-            room.gateY2 = 6
+            room.gate.y1 = 6
+            room.gate.y2 = 6
         end
     end
 
     if (grid[x][y].locked.s) then
-        room.gateX1 = 50
-        room.gateX2 = 59
+        room.gate.x1 = 50
+        room.gate.x2 = 59
         if (y == 5) then
-            room.gateY1 = 22
-            room.gateY2 = 22
+            room.gate.y1 = 22
+            room.gate.y2 = 22
         else
-            room.gateY1 = 18
-            room.gateY2 = 18
+            room.gate.y1 = 18
+            room.gate.y2 = 18
         end
     end
 
     if (grid[x][y].locked.e) then
-        room.gateX1 = 67
-        room.gateX2 = 67
-        room.gateY1 = 10
-        room.gateY2 = 14
+        room.gate.x1 = 67
+        room.gate.x2 = 67
+        room.gate.y1 = 10
+        room.gate.y2 = 14
     end
 
     if (grid[x][y].locked.w) then
-        room.gateX1 = 43
-        room.gateX2 = 43
-        room.gateY1 = 10
-        room.gateY2 = 14
+        room.gate.x1 = 43
+        room.gate.x2 = 43
+        room.gate.y1 = 10
+        room.gate.y2 = 14
+    end
+    
+    room.gateMessageShown = false
+
+    marchSquares()
+end
+
+function marchSquares()
+    for x = 1, 10 do
+        for y = 1, 10 do
+            local v = 0
+            if (room[x - 1][y].solid) then
+                v = v + 1
+            end
+            if (room[x][y].solid) then
+                v = v + 2
+            end
+            if (room[x][y - 1].solid) then
+                v = v + 4
+            end
+            if (room[x - 1][y - 1].solid) then
+                v = v + 8
+            end
+            room[x][y].tile = v + 1
+        end
     end
 end
+

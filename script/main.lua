@@ -1,3 +1,5 @@
+os.setlocale('')
+
 KEY = {
     --  cursors / vim keybindings
     UP = {259, 107},
@@ -33,6 +35,7 @@ end
 function init()
     loadScript("../script/buildstamp.lua")()
     loadScript("../script/messageBox.lua")()
+    loadScript("../script/tiles.lua")()
     loadScript("../script/generator.lua")()
     loadScript("../script/pathFinder.lua")()
     loadScript("../script/player.lua")()
@@ -56,7 +59,7 @@ function init()
     logEvent("Retrieve the Amulet!")
 end
 
-function drawRoom()
+function oldDrawRoom()
     for x = 0, 10 do
         for y = 0, 10 do
             if (room[x][y].solid) then
@@ -69,9 +72,28 @@ function drawRoom()
     end
 
     --  draw gates
-    if (room.gateX1 ~= 0) then
-        for x = room.gateX1, room.gateX2 do
-            for y = room.gateY1, room.gateY2 do
+    if (room.gate.x1 ~= 0) then
+        for x = room.gate.x1, room.gate.x2 do
+            for y = room.gate.y1, room.gate.y2 do
+                printString(x, y, "#")
+            end
+        end
+    end
+end
+
+function drawRoom()
+    for x = 0, 10 do
+        for y = 0, 10 do
+            printString(x * 4 + 32, y * 2 + 1, tiles[room[x][y].tile][1])
+            printString(x * 4 + 32, y * 2 + 2, tiles[room[x][y].tile][2])
+            printString(x * 4 + 32, y * 2 + 3, tiles[room[x][y].tile][3])
+        end
+    end
+
+    --  draw gates
+    if (room.gate.x1 ~= 0) then
+        for x = room.gate.x1, room.gate.x2 do
+            for y = room.gate.y1, room.gate.y2 do
                 printString(x, y, "#")
             end
         end
@@ -254,10 +276,10 @@ function update()
             "(c) Copyright 2024 Andrew Krause",
             "alienbug.games",
             "",
-            "Buildstamp: " .. buildstamp,
-            "",
             "Source available at:",
             "  https://github.com/scgrn/DerivativeDungeon  ",
+            "",
+            "Buildstamp: " .. buildstamp,
             "",
             "Press any key"
         })
