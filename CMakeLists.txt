@@ -23,6 +23,7 @@ list(REMOVE_ITEM LUA_SOURCE "${VENDOR_DIR}/lua-5.3.5/src/luac.c")
 
 add_executable(${PROJECT_NAME}
     "${PROJECT_SOURCE_DIR}/src/main/main.c"
+    "${PROJECT_SOURCE_DIR}/src/main/tiles.c"
     "${LUA_SOURCE}"
 )
 
@@ -40,6 +41,6 @@ target_include_directories(${PROJECT_NAME}
 #target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc)
 
 target_link_libraries(${PROJECT_NAME}
-    ncurses
+    ncursesw
     m
 )

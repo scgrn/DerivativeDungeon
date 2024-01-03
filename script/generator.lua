@@ -307,20 +307,20 @@ function generateRoom(x, y)
 
     --  hallways
     mapRect(0,0,10,10,0)
-    if (n) then mapRect(4,0,6,6,false) end
-    if (e) then mapRect(4,4,10,6,false) end
-    if (s) then mapRect(4,4,6,10,false) end
-    if (w) then mapRect(0,4,6,6,false) end
+    if (n) then mapRect(3,0,6,6,false) end
+    if (e) then mapRect(4,3,10,6,false) end
+    if (s) then mapRect(3,4,6,10,false) end
+    if (w) then mapRect(0,3,6,6,false) end
 
     if (exits == 1) then
-        mapRect(3, 3, 7, 7)
+        mapRect(2, 2, 7, 7)
     else
         --  carve out center
         if (math.random() < 0.5) then
-            local xs = math.random(2, 4)
-            local ys = math.random(2, 4)
-            mapRect(5 - xs, 5 - ys, 5 + xs, 5 + ys)
-
+            room.xs = math.random(2, 3)
+            room.ys = math.random(2, 3)
+            mapRect(4 - room.xs, 4 - room.ys, 5 + room.xs, 5 + room.ys)
+--[[
             -- pillars
             if (math.random() < 0.5 or (xs == 4 and y2 == 4)) then
                 if (math.random() < 0.5) then
@@ -365,6 +365,7 @@ function generateRoom(x, y)
                     end
                 end
             end
+]]
         end
     end
     
@@ -420,23 +421,41 @@ function generateRoom(x, y)
     marchSquares()
 end
 
+local function checkTile(x, y)
+    if (x < 0) then
+        x = 0
+    end
+    if (y < 0) then
+        y = 0
+    end
+    
+    return room[x][y].solid
+end
+
 function marchSquares()
-    for x = 1, 10 do
-        for y = 1, 10 do
+    for x = 0, 10 do
+        for y = 0, 10 do
             local v = 0
-            if (room[x - 1][y].solid) then
+            if (checkTile(x - 1, y)) then
                 v = v + 1
             end
-            if (room[x][y].solid) then
+            if (checkTile(x, y)) then
                 v = v + 2
             end
-            if (room[x][y - 1].solid) then
+            if (checkTile(x, y - 1)) then
                 v = v + 4
             end
-            if (room[x - 1][y - 1].solid) then
+            if (checkTile(x - 1, y - 1)) then
                 v = v + 8
             end
             room[x][y].tile = v + 1
+        end
+    end
+    for x = 0, 10 do
+        for y = 0, 10 do
+            if (room[x][y].tile > 1) then
+                room[x][y].solid = true
+            end
         end
     end
 end

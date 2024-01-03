@@ -4,6 +4,7 @@
 #include "lua-5.3.5/src/lualib.h"
 #include "lua-5.3.5/src/lauxlib.h"
 
+#include <locale.h>
 #include "ncurses.h"
 
 lua_State* luaVM;
@@ -12,6 +13,8 @@ char* luaErrorMsg;
 bool done = false;
 
 void startCurses() {
+    setlocale(LC_ALL, "en_US.UTF-8");
+
     //  initialize ncurses
     initscr();
     noecho();
@@ -57,6 +60,19 @@ static int luaRectangle(lua_State* luaVM) {
     mvaddch(y2, x1, ACS_LLCORNER);
     mvaddch(y1, x2, ACS_URCORNER);
     mvaddch(y2, x2, ACS_LRCORNER);
+
+    return 0;
+}
+
+static int luaDrawTile(lua_State* luaVM) {
+    extern const char* tiles[][4];
+
+    int x = (int)lua_tonumber(luaVM, 1);
+    int y = (int)lua_tonumber(luaVM, 2);
+    int tile = (int)lua_tonumber(luaVM, 3);
+
+    mvprintw(y, x, "%s", tiles[tile][0]);
+    mvprintw(y + 1, x, "%s", tiles[tile][1]);
 
     return 0;
 }
@@ -176,6 +192,7 @@ int main(int argc, char* argv[]) {
     lua_register(luaVM, "printString", luaPrintString);
     lua_register(luaVM, "printChar", luaPrintChar);
     lua_register(luaVM, "rectangle", luaRectangle);
+    lua_register(luaVM, "drawTile", luaDrawTile);
     lua_register(luaVM, "getch", luaGetch);
     lua_register(luaVM, "delay", luaDelay);
     lua_register(luaVM, "quit", luaQuit);
