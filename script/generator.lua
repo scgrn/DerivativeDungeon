@@ -308,8 +308,8 @@ function generateRoom(x, y)
     --  hallways
     mapRect(0,0,10,10,0)
     if (n) then mapRect(3,0,6,6,false) end
-    if (e) then mapRect(4,3,10,6,false) end
-    if (s) then mapRect(3,4,6,10,false) end
+    if (e) then mapRect(3,3,10,6,false) end
+    if (s) then mapRect(3,3,6,10,false) end
     if (w) then mapRect(0,3,6,6,false) end
 
     if (exits == 1) then
@@ -322,6 +322,8 @@ function generateRoom(x, y)
             mapRect(4 - room.xs, 4 - room.ys, 5 + room.xs, 5 + room.ys)
 --[[
             -- pillars
+            local xs = room.xs
+            local ys = room.ys
             if (math.random() < 0.5 or (xs == 4 and y2 == 4)) then
                 if (math.random() < 0.5) then
                     --  center pillar
