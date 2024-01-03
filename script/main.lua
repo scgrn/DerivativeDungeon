@@ -35,7 +35,7 @@ end
 function init()
     loadScript("../script/buildstamp.lua")()
     loadScript("../script/messageBox.lua")()
-    -- loadScript("../script/tiles.lua")()
+    loadScript("../script/tiles.lua")()
     loadScript("../script/generator.lua")()
     loadScript("../script/pathFinder.lua")()
     loadScript("../script/player.lua")()
@@ -84,9 +84,9 @@ end
 function drawRoom()
     for x = 0, 10 do
         for y = 0, 10 do
-            --printString(x * 4 + 33, y * 2 + 1, tiles[room[x][y].tile][1])
-            --printString(x * 4 + 33, y * 2 + 2, tiles[room[x][y].tile][2])
-            drawTile(x * 4 + 33, y * 2 + 1, room[x][y].tile - 1)
+            printString(x * 4 + 33, y * 2 + 1, tiles[room[x][y].tile][1])
+            printString(x * 4 + 33, y * 2 + 2, tiles[room[x][y].tile][2])
+            --drawTile(x * 4 + 33, y * 2 + 1, room[x][y].tile - 1)
         end
     end
 

@@ -23,7 +23,6 @@ list(REMOVE_ITEM LUA_SOURCE "${VENDOR_DIR}/lua-5.3.5/src/luac.c")
 
 add_executable(${PROJECT_NAME}
     "${PROJECT_SOURCE_DIR}/src/main/main.c"
-    "${PROJECT_SOURCE_DIR}/src/main/tiles.c"
     "${LUA_SOURCE}"
 )
 
