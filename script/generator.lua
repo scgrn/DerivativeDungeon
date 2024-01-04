@@ -121,7 +121,7 @@ function visit(x, y)
     until (#potential == 0)
 end
 
-function generateDungeon()
+function generateFloor()
     repeat
         local okay = true
 
@@ -241,10 +241,6 @@ function generateDungeon()
         end
     until okay
 
-    --  entrance
-    grid[3][1].n = true
-    grid[3][1].locked.n = true
-
     --  exit
     grid[3][5].s = true
     grid[3][5].locked.s = true
@@ -289,6 +285,10 @@ function clearRoom()
     }
 end
 
+local function addPillar(x1, y1, x2, y2)
+
+end
+
 function generateRoom(x, y)
     grid[x][y].visited = true
 
@@ -320,7 +320,7 @@ function generateRoom(x, y)
             room.xs = math.random(2, 3)
             room.ys = math.random(2, 3)
             mapRect(4 - room.xs, 4 - room.ys, 5 + room.xs, 5 + room.ys)
---[[
+
             -- pillars
             local xs = room.xs
             local ys = room.ys
@@ -332,7 +332,7 @@ function generateRoom(x, y)
                     if (player.roomX ~= 3 or player.roomY ~= 5) then
                         xs = math.random(1, xs - 1)
                         ys = math.random(1, ys - 1)
-                        mapRect(5 - xs, 5 - ys, 5 + xs, 5 + ys, 1)
+                        addPillar(5 - xs, 5 - ys, 5 + xs, 5 + ys)
                     end
                 else
                     --  two or four pillars
@@ -348,26 +348,25 @@ function generateRoom(x, y)
                     end
 
                     if (xPillars and not yPillars) then
-                        room[5 - xs][5].solid = true
-                        room[5 + xs][5].solid = true
+                        addPillar(5 - xs, 5)
+                        addPillar(5 + xs, 5)
                     end
 
                     if (yPillars and not xPillars) then
                         if (player.roomX ~= 3 or player.roomY ~= 5) then
-                            room[5][5 - ys].solid = true
-                            room[5][5 + ys].solid = true
+                            addPillar(5, 5 - ys)
+                            addPillar(5, 5 + ys)
                         end
                     end
 
                     if (xPillars and yPillars) then
-                        room[5 - xs][5 - ys].solid = true
-                        room[5 + xs][5 - ys].solid = true
-                        room[5 - xs][5 + ys].solid = true
-                        room[5 + xs][5 + ys].solid = true
+                        addPillar(5 - xs, 5 - ys)
+                        addPillar(5 + xs, 5 - ys)
+                        addPillar(5 - xs, 5 + ys)
+                        addPillar(5 + xs, 5 + ys)
                     end
                 end
             end
-]]
         end
     end
     
@@ -383,13 +382,8 @@ function generateRoom(x, y)
     if (grid[x][y].locked.n) then
         room.gate.x1 = 50
         room.gate.x2 = 59
-        if (y == 1) then
-            room.gate.y1 = 2
-            room.gate.y2 = 2
-        else
-            room.gate.y1 = 6
-            room.gate.y2 = 6
-        end
+        room.gate.y1 = 6
+        room.gate.y2 = 6
     end
 
     if (grid[x][y].locked.s) then
@@ -459,6 +453,13 @@ function marchSquares()
                 room[x][y].solid = true
             end
         end
+    end
+end
+
+function generateDungeon()
+    dungeon = {}
+    for floor = 1, FLOORS do
+        dungeon[floor] = generateFloor()
     end
 end
 

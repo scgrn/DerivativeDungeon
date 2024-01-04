@@ -166,11 +166,7 @@ end
 function generateAutomap()
     ret = {}
     table.insert(ret, "Floor 1                              ")
-    if (grid[3][1].visited) then
-        table.insert(ret, "|")
-    else
-        table.insert(ret, "")
-    end
+    table.insert(ret, "")
 
     for y = 1, 5 do
         local s = "    "
