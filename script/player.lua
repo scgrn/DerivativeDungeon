@@ -27,11 +27,42 @@ player = {
     roomY = 5
 }
 
+function ascendStairs()
+    if (currentFloor > 1) then
+        logEvent("You ascend the stairs...")
+
+        currentFloor = currentFloor - 1
+        grid = dungeon[currentFloor]
+
+        player.roomX = grid.down.x
+        player.roomY = grid.down.y
+
+        generateRoom(player.roomX, player.roomY)
+        --  messageBox.open({"Floor " .. currentFloor})
+    end
+end
+
+function descendStairs()
+    if (currentFloor < FLOORS) then
+        logEvent("You descend the stairs...")
+
+        currentFloor = currentFloor + 1
+        grid = dungeon[currentFloor]
+
+        player.roomX = grid.up.x
+        player.roomY = grid.up.y
+
+        generateRoom(player.roomX, player.roomY)
+        --  messageBox.open({"Floor " .. currentFloor})
+    end
+end
+
 function movePlayer(ch)
     local prevPos = {
         x = player.pos.x,
         y = player.pos.y
     }
+    
     if (tableContains(KEY.UP, ch)) then
         player.pos.y = player.pos.y - 1
         if (player.pos.y < 0) then
@@ -43,8 +74,7 @@ function movePlayer(ch)
                 player.pos.y = 0
             end
         end
-    end
-    if (tableContains(KEY.DOWN, ch)) then
+    elseif (tableContains(KEY.DOWN, ch)) then
         player.pos.y = player.pos.y + 1
         if (player.pos.y > 10) then
             if (player.roomY < DUNGEON_HEIGHT) then
@@ -55,27 +85,47 @@ function movePlayer(ch)
                 player.pos.y = 10
             end
         end
-    end
-    if (tableContains(KEY.LEFT, ch)) then
+    elseif (tableContains(KEY.LEFT, ch)) then
         player.pos.x = player.pos.x - 1
         if (player.pos.x < 0) then
             player.roomX = player.roomX - 1
             generateRoom(player.roomX, player.roomY)
             player.pos.x = 10
         end
-    end
-    if (tableContains(KEY.RIGHT, ch)) then
+    elseif (tableContains(KEY.RIGHT, ch)) then
         player.pos.x = player.pos.x + 1
         if (player.pos.x > 10) then
             player.roomX = player.roomX + 1
             generateRoom(player.roomX, player.roomY)
             player.pos.x = 0
         end
+    else
+        --  invalid key
+        return
     end
 
     if (room[player.pos.x][player.pos.y].solid) then
         player.pos = prevPos
     end
+
+    --  check stairs
+    if (grid.down ~= nil) then
+        if (grid.down.x == player.roomX and grid.down.y == player.roomY) then
+            if (player.pos.x == 5 and player.pos.y == 5) then
+                descendStairs()
+                return
+            end
+        end
+    end
+    if (grid.up ~= nil) then
+        if (grid.up.x == player.roomX and grid.up.y == player.roomY) then
+            if (player.pos.x == 5 and player.pos.y == 5) then
+                ascendStairs()
+                return
+            end
+        end
+    end
+
 
     --  check gates
     local sx = player.pos.x * 4 + 35

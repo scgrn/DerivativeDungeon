@@ -475,30 +475,6 @@ function marchSquares()
     end
 end
 
-function ascendStairs()
-    if (currentFloor > 1) then
-        currentFloor = currentFloor - 1
-        grid = dungeon[currentFloor]
-
-        player.roomX = grid.down.x
-        player.roomY = grid.down.y
-
-        generateRoom(player.roomX, player.roomY)()
-    end
-end
-
-function descendStairs()
-    if (currentFloor < FLOORS) then
-        currentFloor = currentFloor + 1
-        grid = dungeon[currentFloor]
-
-        player.roomX = grid.up.x
-        player.roomY = grid.up.y
-
-        generateRoom(player.roomX, player.roomY)()
-    end
-end
-
 function generateDungeon()
     dungeon = {}
     for floor = 1, FLOORS do

@@ -55,7 +55,7 @@ function init()
     generateDungeon()
     generateRoom(player.roomX, player.roomY)
     findPath(player.pos)
-        
+    
     spawnMonster(5, 5, MONSTER_BAT)
 
     logEvent("Retrieve the Amulet!")
@@ -293,7 +293,7 @@ function update()
         messageBox.open(generateAutomap())
     end
 
-    --  user reload
+    --  hot reload
     if (ch == KEY.R) then
         loadScript("../script/main.lua")
         init()
