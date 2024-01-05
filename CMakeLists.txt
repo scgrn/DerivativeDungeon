@@ -26,18 +26,25 @@ add_executable(${PROJECT_NAME}
     "${LUA_SOURCE}"
 )
 
+target_compile_options(${PROJECT_NAME} PRIVATE -finput-charset=UTF-8)
+
 target_include_directories(${PROJECT_NAME}
     PUBLIC "${PROJECT_SOURCE_DIR}/src/main"
 
     # TODO: fix this
     PUBLIC "/msys64/mingw64/include/ncurses"
-
+    PUBLIC "/mingw64/opt/include"
+    
     PUBLIC "${VENDOR_DIR}"
-
     PUBLIC "${VENDOR_DIR}/lua-5.3.5/src"
 )
 
-#target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc)
+#target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -DNCURSES_STATIC)
+target_link_options(${PROJECT_NAME} PRIVATE -DNCURSES_STATIC)
+
+target_link_directories(${PROJECT_NAME}
+    PUBLIC "/mingw64/opt/lib"
+)
 
 target_link_libraries(${PROJECT_NAME}
     ncursesw

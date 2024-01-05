@@ -5,7 +5,12 @@
 #include "lua-5.3.5/src/lualib.h"
 #include "lua-5.3.5/src/lauxlib.h"
 
+#ifdef WIN32
+#include <windows.h>
+#include <ncursesw/ncurses.h>
+#else
 #include "ncurses.h"
+#endif
 
 lua_State* luaVM;
 bool luaErrorFlag = false;
@@ -14,6 +19,9 @@ bool done = false;
 
 void startCurses() {
     setlocale(LC_ALL, "en_US.UTF-8");
+#ifdef WIN32
+    SetConsoleOutputCP(437);
+#endif
 
     //  initialize ncurses
     initscr();
@@ -213,6 +221,9 @@ int main(int argc, char* argv[]) {
     }
 
     killCurses();
+    
+    printf("└───\n");
+    printf("╚═══\n");
     
     return 0;
 }
