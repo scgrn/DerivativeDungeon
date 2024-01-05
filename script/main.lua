@@ -49,7 +49,7 @@ function init()
     rseed = masterSeed
     math.randomseed(rseed)
 
-    currentFloor = 2
+    currentFloor = 1
 
     clearEventLog()
     generateDungeon()

@@ -83,7 +83,8 @@ function movePlayer(ch)
     if (sx >= room.gate.x1 and sx <= room.gate.x2 and sy >= room.gate.y1 and sy <= room.gate.y2) then
         player.pos = prevPos
         if (not room.gate.messageShown) then
-            logEvent("Locked.")
+            logEvent("You cannot leave without")
+            logEvent(" the amulet!")
             room.gate.messageShown = true
         end
     end
@@ -95,7 +96,10 @@ function movePlayer(ch)
             value.hp = value.hp - 1
             if (value.hp == 0) then
                 table.remove(monsters, key)
-                logEvent("You defeated the bat!")
+                logEvent("You defeated the bat!")   
+                logEvent(" +" .. value.exp .. " EXP")
+                
+                player.exp = player.exp + value.exp
             else
                 logEvent("You attacked the bat")
             end
