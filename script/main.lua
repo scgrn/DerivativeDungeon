@@ -49,11 +49,13 @@ function init()
     rseed = masterSeed
     math.randomseed(rseed)
 
+    currentFloor = 2
+
     clearEventLog()
     generateDungeon()
     generateRoom(player.roomX, player.roomY)
     findPath(player.pos)
-    
+        
     spawnMonster(5, 5, MONSTER_BAT)
 
     logEvent("Retrieve the Amulet!")
@@ -96,6 +98,18 @@ function drawRoom()
             for y = room.gate.y1, room.gate.y2 do
                 printString(x, y, "#")
             end
+        end
+    end
+
+    --  draw stairs
+    if (grid.down ~= nil) then
+        if (grid.down.x == player.roomX and grid.down.y == player.roomY) then
+            printString(5 * 4 + 35, 5 * 2 + 2, "D")
+        end
+    end
+    if (grid.up ~= nil) then
+        if (grid.up.x == player.roomX and grid.up.y == player.roomY) then
+            printString(5 * 4 + 35, 5 * 2 + 2, "U")
         end
     end
 end
@@ -165,7 +179,9 @@ end
 
 function generateAutomap()
     ret = {}
-    table.insert(ret, "Floor 1                              ")
+    floor = currentFloor
+    
+    table.insert(ret, "Floor " .. floor .. "                              ")
     table.insert(ret, "")
 
     for y = 1, 5 do
@@ -193,7 +209,11 @@ function generateAutomap()
             table.insert(ret, s)
         end
     end
-    table.insert(ret, "|")
+    if (currentFloor == 1) then
+        table.insert(ret, "|")
+    else
+        table.insert(ret, "")
+    end
 
     return ret
 end
@@ -215,6 +235,20 @@ function update()
                 end
             end
         end
+
+        --  draw stairs on map if player has found them
+        if (grid.down ~= nil) then
+            if (grid[grid.down.x][grid.down.y].visited) then
+                printString(grid.down.x * 6 + 21, grid.down.y * 3 + 3, "D")
+            end
+        end
+        if (grid.up ~= nil) then
+            if (grid[grid.up.x][grid.up.y].visited) then
+                printString(grid.up.x * 6 + 21, grid.up.y * 3 + 3, "U")
+            end
+        end
+        
+        --  draw player
         printString(player.roomX * 6 + 21, player.roomY * 3 + 3, "@")
     end
 

@@ -1,4 +1,4 @@
-FLOORS = 8
+FLOORS = 5
 
 DUNGEON_WIDTH = 5
 DUNGEON_HEIGHT = 5
@@ -121,7 +121,9 @@ function visit(x, y)
     until (#potential == 0)
 end
 
-function generateFloor()
+function generateFloor(floor)
+    local deadEnds = {}
+
     repeat
         local okay = true
 
@@ -216,35 +218,51 @@ function generateFloor()
         if (#potential < 3) then
             okay = false
         else
-            --  place items in dead ends
-            scramble(potential)
-            
-            -- lock test
-            --[[
-            for i = 1, #potential do
-                local x = potential[i].x
-                local y = potential[i].y
-                if (grid[x][y].n) then
-                    grid[x][y].locked.n = true
-                end
-                if (grid[x][y].s) then
-                    grid[x][y].locked.s = true
-                end
-                if (grid[x][y].e) then
-                    grid[x][y].locked.e = true
-                end
-                if (grid[x][y].w) then
-                    grid[x][y].locked.w = true
-                end
-            end
-            ]]
+            deadEnds = potential
         end
     until okay
 
-    --  exit
-    grid[3][5].s = true
-    grid[3][5].locked.s = true
+    --  place items in dead ends
+    scramble(deadEnds)
+    
+    if (floor > 1) then
+        grid.up = table.remove(deadEnds)
+    else
+        grid.up = nil    
+    end
+    
+    if (floor < FLOORS) then
+        grid.down = table.remove(deadEnds)
+    else
+        grid.down = nil    
+    end
 
+    -- lock test
+    --[[
+    for i = 1, #potential do
+        local x = potential[i].x
+        local y = potential[i].y
+        if (grid[x][y].n) then
+            grid[x][y].locked.n = true
+        end
+        if (grid[x][y].s) then
+            grid[x][y].locked.s = true
+        end
+        if (grid[x][y].e) then
+            grid[x][y].locked.e = true
+        end
+        if (grid[x][y].w) then
+            grid[x][y].locked.w = true
+        end
+    end
+    ]]
+
+    --  dungeon entrance
+    if (floor == 1) then
+        grid[3][5].s = true
+        grid[3][5].locked.s = true
+    end
+    
     --  clear visited flags for automap
     for x = 1, DUNGEON_WIDTH do
       for y = 1, DUNGEON_HEIGHT do
@@ -253,6 +271,7 @@ function generateFloor()
     end
 
     --reseed()
+    return grid
 end
 
 function mapRect(x1, y1, x2, y2, v)
@@ -456,10 +475,35 @@ function marchSquares()
     end
 end
 
+function ascendStairs()
+    if (currentFloor > 1) then
+        currentFloor = currentFloor - 1
+        grid = dungeon[currentFloor]
+
+        player.roomX = grid.down.x
+        player.roomY = grid.down.y
+
+        generateRoom(player.roomX, player.roomY)()
+    end
+end
+
+function descendStairs()
+    if (currentFloor < FLOORS) then
+        currentFloor = currentFloor + 1
+        grid = dungeon[currentFloor]
+
+        player.roomX = grid.up.x
+        player.roomY = grid.up.y
+
+        generateRoom(player.roomX, player.roomY)()
+    end
+end
+
 function generateDungeon()
     dungeon = {}
     for floor = 1, FLOORS do
-        dungeon[floor] = generateFloor()
+        dungeon[floor] = generateFloor(floor)
     end
+    grid = dungeon[currentFloor]
 end
 
