@@ -11,6 +11,20 @@ for i = 1, #spells do
 end
 selected = 0
 
+function learnSpell(spell)
+    logEvent("You found a spellbook")
+    local message = {
+        "You found the " .. spells[spell].spellbook,
+        "",
+        "You learn " .. spells[spell].name
+    }
+    if (spell ~= 5) then
+        message[3] = message[3] .. " spell"
+    end
+    messageBox.open(message)
+    spells[spell].learned = true
+end
+
 function castSpell()
     if (selected == 0) then
         messageBox.open({

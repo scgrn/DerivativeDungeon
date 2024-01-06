@@ -19,7 +19,7 @@ player = {
     nextMagic = {100, 300, 700, 1200, 2200, 3500, 6000},
     nextAttack = {200, 500, 1000, 2000, 3000, 5000, 8000},
 
-    damageLevel = {8, 12, 16, 24, 32, 48, 64, 96},
+    damage = {8, 12, 16, 24, 32, 48, 64, 96},
 
     next = 50,
     
@@ -113,7 +113,10 @@ function movePlayer(ch)
         player.pos = prevPos
     end
 
+    checkItems(player.pos.x, player.pos.y)
+    
     --  check stairs
+    --  TODO: make into items
     if (grid.down ~= nil) then
         if (grid.down.x == player.roomX and grid.down.y == player.roomY) then
             if (player.pos.x == 5 and player.pos.y == 5) then
@@ -148,8 +151,8 @@ function movePlayer(ch)
     for key, value in pairs(monsters) do
         if (value.pos.x == player.pos.x and value.pos.y == player.pos.y) then
             player.pos = prevPos
-            value.hp = value.hp - 1
-            if (value.hp == 0) then
+            value.hp = value.hp - player.damage[player.attackLevel]
+            if (value.hp <= 0) then
                 table.remove(monsters, key)
                 logEvent("You defeated the bat!")   
                 logEvent(" +" .. value.exp .. " EXP")

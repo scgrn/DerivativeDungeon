@@ -1,5 +1,3 @@
-os.setlocale('')
-
 KEY = {
     --  cursors / vim keybindings
     UP = {259, 107},
@@ -36,6 +34,7 @@ function init()
     loadScript("../script/buildstamp.lua")()
     loadScript("../script/messageBox.lua")()
     loadScript("../script/tiles.lua")()
+    loadScript("../script/items.lua")()
     loadScript("../script/generator.lua")()
     loadScript("../script/pathFinder.lua")()
     loadScript("../script/player.lua")()
@@ -58,6 +57,21 @@ function init()
     findPath(player.pos)
     
     spawnMonster(5, 5, MONSTER_BAT)
+    addItem(7, 5, "k", function()
+        logEvent("You found a RUSTY KEY")
+        inventory.rustyKey = inventory.rustyKey + 1
+    end)
+    
+    for spell = 1, 5 do
+        addItem(2 + spell, 3, "s", function()
+            learnSpell(spell)
+        end)
+    end
+    
+    addItem(1, 5, "o", function()
+        messageBox.open({"You found the OPAL EYE"})
+        inventory.opalEye = true
+    end) 
 
     logEvent("Retrieve the Amulet!")
 end
@@ -126,7 +140,8 @@ function drawScreen()
 
     rectangle(2, 4, 31, 6)
     printString(4, 5, "EXP / Next:")
-    printString(19, 5, player.exp .. " / " .. player.next)
+    local str = player.exp .. " / " .. player.next
+    printString(30 - #str, 5, str)
 
     rectangle(2, 7, 31, 13)
     printString(4, 8, "Life:")
@@ -137,8 +152,10 @@ function drawScreen()
     printString(14, 10, "Lvl " .. player.magicLevel)
     printString(14, 12, "Lvl " .. player.attackLevel)
 
-    printString(23, 8, player.hp .. " / " .. player.maxHp)
-    printString(23, 10, player.mp .. " / " .. player.maxMp)
+    str = player.hp .. " / " .. player.maxHp
+    printString(30 - #str, 8, str)
+    str = player.mp .. " / " .. player.maxMp
+    printString(30 - #str, 10, str)
 
     rectangle(2, 14, 31, 20)
     drawEventLog()
@@ -149,6 +166,7 @@ function drawScreen()
     drawRoom()
     rectangle(33, 1, 77, 23)
 
+    drawItems()
     drawMonsters()
     printString(35 + player.pos.x * 4, player.pos.y * 2 + 2, "@")
 end
