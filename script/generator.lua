@@ -302,10 +302,18 @@ function clearRoom()
         y2 = 0,
         messageShown = false
     }
+    room.pillars = {}
 end
 
 local function addPillar(x1, y1, x2, y2)
-    
+    x2 = x2 or x1
+    y2 = y2 or y1
+    table.insert(room.pillars, {
+        x1 = x1,
+        y1 = y1,
+        x2 = x2,
+        y2 = y2
+    })
 end
 
 function generateRoom(x, y)
@@ -335,7 +343,7 @@ function generateRoom(x, y)
         mapRect(2, 2, 7, 7)
     else
         --  carve out center
-        if (math.random() < 0.5) then
+        if (math.random() < 0.75) then
             room.xs = math.random(2, 3)
             room.ys = math.random(2, 3)
             mapRect(4 - room.xs, 4 - room.ys, 5 + room.xs, 5 + room.ys)
@@ -343,8 +351,8 @@ function generateRoom(x, y)
             -- pillars
             local xs = room.xs
             local ys = room.ys
-            if (math.random() < 0.5 or (xs == 4 and y2 == 4)) then
-                if (math.random() < 0.5) then
+            if (math.random() < 0.65 or (xs == 3 and ys == 3)) then
+                if (math.random() < 0.35) then
                     --  center pillar
 
                     --  (as long as we're not in the first room)
@@ -434,6 +442,16 @@ function generateRoom(x, y)
     room.gateMessageShown = false
 
     marchSquares()
+
+    --  add pillars
+    for _, pillar in pairs(room.pillars) do
+        for y = pillar.y1, pillar.y2 do
+            for x = pillar.x1, pillar.x2 do
+                room[x][y].solid = true
+                room[x][y].tile = 16
+            end
+        end
+    end
 end
 
 local function checkTile(x, y)

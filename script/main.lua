@@ -62,6 +62,7 @@ function init()
         inventory.rustyKey = inventory.rustyKey + 1
     end)
     
+    --[[
     for spell = 1, 5 do
         addItem(2 + spell, 3, "s", function()
             learnSpell(spell)
@@ -72,30 +73,9 @@ function init()
         messageBox.open({"You found the OPAL EYE"})
         inventory.opalEye = true
     end) 
+    ]]
 
     logEvent("Retrieve the Amulet!")
-end
-
-function oldDrawRoom()
-    for x = 0, 10 do
-        for y = 0, 10 do
-            if (room[x][y].solid) then
-                rectangle(x * 4 + 33, y * 2 + 1, x * 4 + 36, y * 2 + 3)
-            else
-                printString(x * 4 + 35, y * 2 + 2, ".")
-            end
-            --printString(x * 4 + 35, y * 2 + 2, "" .. room[x][y].distance)
-        end
-    end
-
-    --  draw gates
-    if (room.gate.x1 ~= 0) then
-        for x = room.gate.x1, room.gate.x2 do
-            for y = room.gate.y1, room.gate.y2 do
-                printString(x, y, "#")
-            end
-        end
-    end
 end
 
 function drawRoom()
@@ -116,6 +96,12 @@ function drawRoom()
         end
     end
 
+    --  draw pillars
+    for _, pillar in pairs(room.pillars) do
+        local doubleLines = (pillar.x1 ~= pillar.x2)
+        rectangle(pillar.x1 * 4 + 33, pillar.y1 * 2 + 1, pillar.x2 * 4 + 36, pillar.y2 * 2 + 3, doubleLines)
+    end
+        
     --  draw stairs
     if (grid.down ~= nil) then
         if (grid.down.x == player.roomX and grid.down.y == player.roomY) then

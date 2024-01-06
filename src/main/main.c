@@ -60,14 +60,43 @@ static int luaRectangle(lua_State* luaVM) {
     int x2 = (int)lua_tonumber(luaVM, 3);
     int y2 = (int)lua_tonumber(luaVM, 4);
 
-    mvhline(y1, x1, 0, x2 - x1);
-    mvhline(y2, x1, 0, x2 - x1);
-    mvvline(y1, x1, 0, y2 - y1);
-    mvvline(y1, x2, 0, y2 - y1);
-    mvaddch(y1, x1, ACS_ULCORNER);
-    mvaddch(y2, x1, ACS_LLCORNER);
-    mvaddch(y1, x2, ACS_URCORNER);
-    mvaddch(y2, x2, ACS_LRCORNER);
+    bool doubleLines = false;
+    if (lua_gettop(luaVM) >= 5) {
+        doubleLines = (bool)lua_toboolean(luaVM, 5);
+    }
+    
+    if (doubleLines) {
+        const wchar_t* wstr[] = {
+            L"╔",
+            L"╗",
+            L"╚",
+            L"╝",
+            L"═",
+            L"║",
+        };
+
+        for (int x = x1 + 1; x < x2; x++) {
+            mvaddwstr(y1, x, wstr[4]);
+            mvaddwstr(y2, x, wstr[4]);
+        } 
+        for (int y = y1 + 1; y < y2; y++) {
+            mvaddwstr(y, x1, wstr[5]);
+            mvaddwstr(y, x2, wstr[5]);
+        } 
+        mvaddwstr(y1, x1, wstr[0]);
+        mvaddwstr(y1, x2, wstr[1]);
+        mvaddwstr(y2, x1, wstr[2]);
+        mvaddwstr(y2, x2, wstr[3]);
+    } else {
+        mvhline(y1, x1, 0, x2 - x1);
+        mvhline(y2, x1, 0, x2 - x1);
+        mvvline(y1, x1, 0, y2 - y1);
+        mvvline(y1, x2, 0, y2 - y1);
+        mvaddch(y1, x1, ACS_ULCORNER);
+        mvaddch(y2, x1, ACS_LLCORNER);
+        mvaddch(y1, x2, ACS_URCORNER);
+        mvaddch(y2, x2, ACS_LRCORNER);
+    }
 
     return 0;
 }
