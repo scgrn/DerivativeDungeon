@@ -42,6 +42,7 @@ function init()
     loadScript("../script/magic.lua")()
     loadScript("../script/inventory.lua")()
     loadScript("../script/eventLog.lua")()
+    loadScript("../script/automap.lua")()
 
     math.randomseed(os.time())
     masterSeed = math.random(256 ^ 4)
@@ -57,12 +58,17 @@ function init()
     findPath(player.pos)
     
     spawnMonster(5, 5, MONSTER_BAT)
+    addItem(4, 4, "o", function()
+        messageBox.open({"You found the OPAL EYE"})
+        inventory.opalEye = true
+    end) 
+    
+    --[[
     addItem(7, 5, "k", function()
         logEvent("You found a RUSTY KEY")
         inventory.rustyKey = inventory.rustyKey + 1
     end)
     
-    --[[
     for spell = 1, 5 do
         addItem(2 + spell, 3, "s", function()
             learnSpell(spell)
@@ -179,48 +185,6 @@ function showHelp()
         "",
         "Press any key"
     })
-    -- messageBox.open({"Found spellbook. Learn *LIFE* spell."})
-end
-
-function generateAutomap()
-    ret = {}
-    floor = currentFloor
-    
-    table.insert(ret, "Floor " .. floor .. "                              ")
-    table.insert(ret, "")
-
-    for y = 1, 5 do
-        local s = "    "
-        for x = 1, 4 do
-            if (grid[x][y].e and (grid[x][y].visited or grid[x + 1][y].visited)) then
-                s = s .. "___   "
-            else
-                s = s .. "      "
-            end
-        end
-        s = s .. " "
-        table.insert(ret, s)
-        table.insert(ret, "")
-
-        if (y ~= 5) then
-            s = ""
-            for x = 1, 5 do
-                if (grid[x][y].s and (grid[x][y].visited or grid[x][y + 1].visited)) then
-                    s = s .. "  |   "
-                else
-                    s = s .. "      "
-                end
-            end
-            table.insert(ret, s)
-        end
-    end
-    if (currentFloor == 1) then
-        table.insert(ret, "|")
-    else
-        table.insert(ret, "")
-    end
-
-    return ret
 end
 
 function update()
@@ -231,116 +195,97 @@ function update()
     messageBox.update()
     messageBox.render()
 
-    -- draw map
-    if (showingMap and messageBox.state == messageBox.States.OPEN) then
-        for x = 1, DUNGEON_WIDTH do
-            for y = 1, DUNGEON_HEIGHT do
-                if (grid[x][y].visited) then
-                  rectangle(x * 6 + 20, y * 3 + 3, x * 6 + 22, y * 3 + 4)
-                end
-            end
-        end
-
-        --  draw stairs on map if player has found them
-        if (grid.down ~= nil) then
-            if (grid[grid.down.x][grid.down.y].visited) then
-                printString(grid.down.x * 6 + 21, grid.down.y * 3 + 3, "D")
-            end
-        end
-        if (grid.up ~= nil) then
-            if (grid[grid.up.x][grid.up.y].visited) then
-                printString(grid.up.x * 6 + 21, grid.up.y * 3 + 3, "U")
-            end
-        end
-        
-        --  draw player
-        printString(player.roomX * 6 + 21, player.roomY * 3 + 3, "@")
-    end
-
+    automap.render()
+    
     if (animating) then
         delay(50);
     else
         ch = getch()
         -- logEvent("Scancode: " .. ch)
-        if (messageBox.state == messageBox.States.OPEN) then
-            ch = 0
-            messageBox.close()
-            showingMap = false
+
+        if (showingMap) then
+            automap.checkKeypress(ch)
         else
-            movePlayer(ch)
-            updateMonsters()
+            if (messageBox.state == messageBox.States.OPEN) then
+                messageBox.close()
+                showingMap = false
+
+                return
+            else
+                movePlayer(ch)
+                updateMonsters()
+
+                --  help message
+                if (ch == KEY.HELP) then
+                    showHelp()
+                end
+
+                -- show inventory
+                if (ch == KEY.I) then
+                    showInventory()
+                end
+
+                --  open spellbook
+                if (ch == KEY.S) then
+                    openSpellbook()
+                end
+
+                --  cast spell
+                if (ch == KEY.C) then
+                    castSpell()
+                end
+
+                --  draw map
+                if (ch == KEY.M) then
+                    automap.open()
+                end
+
+                --  hot reload
+                if (ch == KEY.R) then
+                    loadScript("../script/main.lua")
+                    init()
+                end
+
+                if (ch == KEY.A) then
+                    messageBox.open({
+                        "Derivative Dungeon",
+                        "",
+                        "(c) Copyright 2024 Andrew Krause",
+                        "alienbug.games",
+                        "",
+                        "Source available at:",
+                        "  https://github.com/scgrn/DerivativeDungeon  ",
+                        "",
+                        "Buildstamp: " .. buildstamp,
+                        "",
+                        "Press any key"
+                    })
+                end
+                
+                if (ch == KEY.V) then
+                    messageBox.open({
+                        "Current random seed:",
+                        "",
+                        "80A9 45E2"
+                    })
+                end
+
+                if (ch == KEY.E) then
+                    messageBox.open({
+                        "Enter random seed:",
+                        "(this will start a new game)",
+                        "",
+                        "---- ----",
+                        "",
+                        "Press Enter to accept or Esc to cancel"
+                    })
+                end
+
+                if (tableContains(KEY.Q, ch)) then
+                    quit()
+                end
+            end
         end
-    end
-
-    --  help message
-    if (ch == KEY.HELP) then
-        showHelp()
-    end
-
-    -- show inventory
-    if (ch == KEY.I) then
-        showInventory()
-    end
-
-    --  open spellbook
-    if (ch == KEY.S) then
-        openSpellbook()
-    end
-
-    --  cast spell
-    if (ch == KEY.C) then
-        castSpell()
-    end
-
-    --  draw map
-    if (ch == KEY.M) then
-        showingMap = true
-        messageBox.open(generateAutomap())
-    end
-
-    --  hot reload
-    if (ch == KEY.R) then
-        loadScript("../script/main.lua")
-        init()
-    end
-
-    if (ch == KEY.A) then
-        messageBox.open({
-            "Derivative Dungeon",
-            "",
-            "(c) Copyright 2024 Andrew Krause",
-            "alienbug.games",
-            "",
-            "Source available at:",
-            "  https://github.com/scgrn/DerivativeDungeon  ",
-            "",
-            "Buildstamp: " .. buildstamp,
-            "",
-            "Press any key"
-        })
-    end
-    
-    if (ch == KEY.V) then
-        messageBox.open({
-            "Current random seed:",
-            "",
-            "80A9 45E2"
-        })
-    end
-
-    if (ch == KEY.E) then
-        messageBox.open({
-            "Enter random seed:",
-            "(this will start a new game)",
-            "",
-            "---- ----",
-            "",
-            "Press Enter to accept or Esc to cancel"
-        })
-    end
-
-    if (tableContains(KEY.Q, ch)) then
-        quit()
     end
 end
 

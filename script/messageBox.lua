@@ -16,15 +16,13 @@ messageBox = {
     x2 = 0,
 }
 
-function messageBox.open(message)
+function messageBox.setMessage(message)
     -- TODO: enfore message is table
 
     messageBox.message = message
-    messageBox.state = messageBox.States.OPENING
 
     messageBox.maxSize = #message + 3
-    messageBox.currentSize = 0
-
+    
     local longestMessage = 20
     for k, v in pairs(message) do
         longestMessage = math.max(#v + 6, longestMessage)
@@ -38,6 +36,12 @@ function messageBox.open(message)
     for i = 1, width - 1 do
         blankString = blankString .. " "
     end
+end
+
+function messageBox.open(message)
+    messageBox.state = messageBox.States.OPENING
+    messageBox.currentSize = 0
+    messageBox.setMessage(message)
 end
 
 function messageBox.close()

@@ -54,6 +54,10 @@ function descendStairs()
         currentFloor = currentFloor + 1
         grid = dungeon[currentFloor]
 
+        if (currentFloor > deepestFloor) then
+            deepestFloor = currentFloor
+        end
+
         player.roomX = grid.up.x
         player.roomY = grid.up.y
 
