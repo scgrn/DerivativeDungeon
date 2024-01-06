@@ -50,6 +50,7 @@ function init()
     math.randomseed(rseed)
 
     currentFloor = 1
+    deepestFloor = 1
 
     clearEventLog()
     generateDungeon()

@@ -3,6 +3,10 @@ inventory = {
     ironKey =   false,
     silverKey = false,
     goldKey = false,
+    
+    lantern = false,
+    opalEye = false,
+    
     amulet = false,
 }
 
@@ -16,10 +20,14 @@ function showInventory()
         "",
     }
 
+    local anything = false
+
     if (inventory.rustyKey == 1) then
         table.insert(display, "RUSTY KEY")
+        anything = true
     elseif (inventory.rustyKey > 0) then
         table.insert(display, "RUSTY KEY x" .. inventory.rustyKey)
+        anything = true
     end
 
     if (inventory.ironKey) then
@@ -34,13 +42,32 @@ function showInventory()
         table.insert(display, "GOLD KEY")
     end
 
+    if (inventory.lantern) then
+        table.insert(display, "LANTERN")
+    end
+
+    if (inventory.opalEye) then
+        table.insert(display, "OPAL EYE")
+    end
+
     if (inventory.amulet) then
         table.insert(display, "THE AMULET")
     end
 
-    table.insert(display, "")
-    table.insert(display, "YOUR LIFE")
-    table.insert(display, "")
+    if (not anything) then
+        for key, value in pairs(inventory) do
+            if (type(value) == "boolean" and value) then
+                anything = true
+                break
+            end
+        end
+    end
 
+    if (not anything) then
+        table.insert(display, "")
+        table.insert(display, "YOUR LIFE")
+        table.insert(display, "")
+    end
+    
     messageBox.open(display)
 end

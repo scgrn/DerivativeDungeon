@@ -14,6 +14,7 @@ function spawnMonster(x, y, species)
         pos = {x = x, y = y},
         species = species,
         aware = false,
+        
         hp = 3,
         exp = 5,
         dmg = 4
@@ -58,7 +59,7 @@ function updateMonsters()
             value.pos = prevPos
             player.hp = player.hp - value.dmg
             logEvent("The bat attacked you")
-                logEvent("The bat attacked you")
+            logEvent(" -" .. value.dmg .. " HP")
         end
     end
 end
