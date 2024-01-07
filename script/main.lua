@@ -121,10 +121,45 @@ function drawRoom()
     end
 end
 
-function drawScreen()
-    -- printString(8, 8, "Generate")
-    -- printString(10, 8, "Enter seed: ")
+function drawDarkness()
+    distances = {0, 24, 18, 12, 8} -- indexed by floor
+    
+    if (inventory.latern or currentFloor == 1) then
+        return
+    end
 
+    local playerX = player.pos.x * 4 + 35
+    local playerY = player.pos.y * 2 + 2
+    
+    local dist = distances[currentFloor]
+    
+    local minY = playerY - dist / 2
+    local maxY = playerY + dist / 2
+    if (minY < 1) then
+        minY = 1
+    end
+    if (maxY > 23) then
+        maxY = 23
+    end
+    for y = 2, minY - 1 do
+        printString(34, y, "                                           ")
+    end
+
+    for y = minY, maxY do
+        for x = 34, 76 do
+            local d = ((playerX - x) * (playerX - x)) + ((playerY - y) * (playerY - y) * 3)
+            if (d > dist * dist) then
+                printString(x, y, " ")
+            end
+        end
+    end
+
+    for y = maxY + 1, 22 do
+        printString(34, y, "                                           ")
+    end
+end
+
+function drawScreen()
     rectangle(0, 0, 79, 24)
 
     rectangle(2, 1, 31, 3)
@@ -156,11 +191,13 @@ function drawScreen()
     printString(4, 22, "Press [?] for help")
 
     drawRoom()
-    rectangle(33, 1, 77, 23)
 
     drawItems()
     drawMonsters()
-    printString(35 + player.pos.x * 4, player.pos.y * 2 + 2, "@")
+    drawDarkness()
+    printString(player.pos.x * 4 + 35, player.pos.y * 2 + 2, "@")
+
+    rectangle(33, 1, 77, 23)
 end
 
 function showHelp()
