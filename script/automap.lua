@@ -6,7 +6,11 @@ local function generate()
     ret = {}
     local grid = dungeon[viewingFloor]
     
-    table.insert(ret, "Floor " .. viewingFloor .. "                              ")
+    if (viewingFloor == currentFloor) then
+        table.insert(ret, "Floor " .. viewingFloor .. "                              ")
+    else
+        table.insert(ret, "Floor " .. viewingFloor .. "                    Current: " .. currentFloor .. "")
+    end
     table.insert(ret, "")
 
     for y = 1, DUNGEON_HEIGHT do

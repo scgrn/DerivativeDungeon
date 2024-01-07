@@ -1,7 +1,14 @@
-FLOORS = 5
-
 DUNGEON_WIDTH = 5
 DUNGEON_HEIGHT = 5
+
+FLOORS = 6
+MIN_DEAD_ENDS = 5
+
+-- guaranteed dead ends = (MIN_DEAD_ENDS - 2) * FLOORS + 2
+
+
+local roomsVisited = 0
+local failedGenerationsString = "("
 
 function scramble(a)
     for i = 1, #a do
@@ -70,26 +77,27 @@ end
 function visit(x, y)
     grid[x][y].visited = true
     grid[x][y].seed = math.random(256 ^ 4)
+    roomsVisited = roomsVisited + 1
 
     repeat
         local potential={}
         if (x > 1 and not grid[x-1][y].visited) then
-            if (not grid[x-1][y].blocked) then
+            if (not grid[x - 1][y].blocked) then
                 table.insert(potential, {x - 1, y})
             end
         end
         if (x < DUNGEON_WIDTH and not grid[x + 1][y].visited) then
-            if (not grid[x+1][y].blocked) then
+            if (not grid[x + 1][y].blocked) then
                 table.insert(potential, {x + 1, y})
             end
         end
         if (y > 1 and not grid[x][y - 1].visited) then
-            if (not grid[x][y-1].blocked) then
+            if (not grid[x][y - 1].blocked) then
                 table.insert(potential, {x, y - 1})
             end
         end
         if (y < DUNGEON_HEIGHT and not grid[x][y + 1].visited) then
-            if (not grid[x][y+1].blocked) then
+            if (not grid[x][y + 1].blocked) then
                 table.insert(potential, {x, y + 1})
             end
         end
@@ -124,6 +132,7 @@ end
 function generateFloor(floor)
     local deadEnds = {}
 
+    local failedGenerations = 0
     repeat
         local okay = true
 
@@ -154,48 +163,66 @@ function generateFloor(floor)
         end
 
         erodeCorners()
+        for i = 1, 2 do
+            grid[math.random(2, DUNGEON_WIDTH - 1)][math.random(2, DUNGEON_HEIGHT - 1)].blocked = true
+        end
 
         -- count rooms
-        totalRooms = 0
-        for x = 1, DUNGEON_WIDTH - 1 do
-          for y = 1, DUNGEON_HEIGHT - 1 do
-            if (not grid[x][y].blocked) then
-              totalRooms = totalRooms + 1
+        local totalRooms = 0
+        for x = 1, DUNGEON_WIDTH do
+            for y = 1, DUNGEON_HEIGHT do
+                if (not grid[x][y].blocked) then
+                    totalRooms = totalRooms + 1
+                end
             end
-          end
         end
 
         -- build maze
-        visit(math.floor(DUNGEON_WIDTH / 2), math.floor(DUNGEON_HEIGHT / 2))
+        local start = {
+            x = math.floor(DUNGEON_WIDTH / 2),
+            y = math.floor(DUNGEON_HEIGHT / 2)
+        }
+        while (grid[start.x][start.y].blocked) do
+            start.x = math.random(1, DUNGEON_WIDTH)
+            start.y = math.random(1, DUNGEON_HEIGHT)
+        end
 
+        roomsVisited = 0
+        visit(start.x, start.y)
+
+        --  regen if there are any unreachable islands
+        if (roomsVisited < totalRooms) then
+            okay = false
+            failedGenerations = failedGenerations + 1
+        end
+        
         -- knock out random walls
         local potential = {}
         for x = 1, DUNGEON_WIDTH - 1 do
             for y = 1, DUNGEON_HEIGHT - 1 do
                 if (not grid[x][y].blocked) then
-                  if (not grid[x][y].s and not grid[x][y + 1].blocked) then
-                      table.insert(potential, {x, y, 0})
-                  end
+                    if (not grid[x][y].s and not grid[x][y + 1].blocked) then
+                        table.insert(potential, {x, y, 0})
+                    end
 
-                  if (not grid[x][y].e and not grid[x + 1][y].blocked) then
-                      table.insert(potential,{x, y, 1})
-                  end
+                    if (not grid[x][y].e and not grid[x + 1][y].blocked) then
+                        table.insert(potential,{x, y, 1})
+                    end
                 end
             end
         end
-
         for i = 1, math.floor(totalRooms / 5) do
             if (#potential >= 1) then
-              local index = math.random(#potential)
-              r = potential[index]
-              if (r[3] == 0) then
-                  grid[r[1] ][r[2] ].s = true
-                  grid[r[1] ][r[2] + 1].n = true
-              else
-                  grid[r[1] ][r[2] ].e = true
-                  grid[r[1] + 1][r[2] ].w = true
-              end
-              table.remove(potential, index)
+                local index = math.random(#potential)
+                r = potential[index]
+                if (r[3] == 0) then
+                    grid[r[1] ][r[2] ].s = true
+                    grid[r[1] ][r[2] + 1].n = true
+                else
+                    grid[r[1] ][r[2] ].e = true
+                    grid[r[1] + 1][r[2] ].w = true
+                end
+                table.remove(potential, index)
             end
         end
 
@@ -208,33 +235,42 @@ function generateFloor(floor)
                     (grid[x][y].e and 1 or 0) +
                     (grid[x][y].w and 1 or 0)
 
-                if (exits == 1 and ((x ~= 3 or y ~= 5) and (x ~= 3 or y ~= 1))) then
+                if (not grid[x][y].blocked and exits == 1 and (floor ~=1 or x ~= 3 or y ~= 5)) then
                     table.insert(potential, {x = x, y = y})
                 end
             end
         end
 
         -- regen if not enough dead ends
-        if (#potential < 3) then
-            okay = false
+        if (#potential < MIN_DEAD_ENDS) then
+            if (okay) then
+                okay = false
+                failedGenerations = failedGenerations + 1
+            end
         else
             deadEnds = potential
         end
     until okay
-
+    failedGenerationsString = failedGenerationsString .. failedGenerations
+    if (floor == FLOORS) then
+        failedGenerationsString = failedGenerationsString .. ")"
+    else
+        failedGenerationsString = failedGenerationsString .. ","
+    end
+    
     --  place items in dead ends
     scramble(deadEnds)
     
     if (floor > 1) then
         grid.up = table.remove(deadEnds)
     else
-        grid.up = nil    
+        grid.up = nil
     end
     
     if (floor < FLOORS) then
         grid.down = table.remove(deadEnds)
     else
-        grid.down = nil    
+        grid.down = nil
     end
 
     -- lock test
@@ -265,9 +301,9 @@ function generateFloor(floor)
     
     --  clear visited flags for automap
     for x = 1, DUNGEON_WIDTH do
-      for y = 1, DUNGEON_HEIGHT do
-        grid[x][y].visited = false
-      end
+        for y = 1, DUNGEON_HEIGHT do
+            grid[x][y].visited = false
+        end
     end
 
     --reseed()
@@ -499,5 +535,7 @@ function generateDungeon()
         dungeon[floor] = generateFloor(floor)
     end
     grid = dungeon[currentFloor]
+
+    -- logEvent("Fails: " .. failedGenerationsString)
 end
 

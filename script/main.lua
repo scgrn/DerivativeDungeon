@@ -64,6 +64,11 @@ function init()
     end) 
     
     --[[
+    addItem(6, 4, "l", function()
+        messageBox.open({"You found a LANTERN to light your way."})
+        inventory.lantern = true
+    end) 
+
     addItem(7, 5, "k", function()
         logEvent("You found a RUSTY KEY")
         inventory.rustyKey = inventory.rustyKey + 1
@@ -122,17 +127,22 @@ function drawRoom()
 end
 
 function drawDarkness()
-    distances = {0, 24, 18, 12, 8} -- indexed by floor
-    
-    if (inventory.latern or currentFloor == 1) then
+    distances = {0, 30, 24, 18, 12, 8} -- indexed by floor
+
+    if (inventory.lantern or currentFloor == 1) then
         return
     end
 
     local playerX = player.pos.x * 4 + 35
     local playerY = player.pos.y * 2 + 2
     
-    local dist = distances[currentFloor]
-    
+    local dist = 0
+    if (currentFloor <= #distances) then
+        dist = distances[currentFloor]
+    else
+        dist = distances[#distances]
+    end
+
     local minY = playerY - dist / 2
     local maxY = playerY + dist / 2
     if (minY < 1) then
