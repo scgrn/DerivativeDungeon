@@ -66,8 +66,8 @@ function showInventory()
     if (not anything) then
         table.insert(display, "")
         table.insert(display, "YOUR LIFE")
-        table.insert(display, "")
     end
-    
+    table.insert(display, "")
+
     messageBox.open(display)
 end

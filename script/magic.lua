@@ -65,3 +65,28 @@ function openSpellbook()
 
     messageBox.open(display)
 end
+
+function placeSpellbooks()
+    local skip = math.random(1, 5)
+    
+    local spellMap = {1, 2, 3, 4}
+    scramble(spellMap)
+    spellMap[5] = 5
+    
+    for spell = 1, 5 do
+        local floor = spell
+        if (floor >= skip) then
+            floor = floor + 1
+        end
+        local room = table.remove(dungeon[floor].deadEnds)
+        table.insert(dungeon[floor][room.x][room.y].items, {
+            x = 5,
+            y = 5,
+            representation = "s",
+            effect = function()
+                learnSpell(spellMap[spell])
+            end,
+        })
+    end
+end
+
