@@ -59,19 +59,10 @@ function init()
     
     spawnMonster(5, 5, MONSTER_BAT)
     --[[
-    addItem(4, 4, "o", function()
-    end) 
-
     addItem(7, 5, "k", function()
         logEvent("You found a RUSTY KEY")
         inventory.rustyKey = inventory.rustyKey + 1
     end)
-    
-    for spell = 1, 5 do
-        addItem(2 + spell, 3, "s", function()
-            learnSpell(spell)
-        end)
-    end
     ]]
 
     logEvent("Retrieve the Amulet!")
@@ -82,7 +73,6 @@ function drawRoom()
         for y = 0, 10 do
             printString(x * 4 + 33, y * 2 + 1, tiles[room[x][y].tile][1])
             printString(x * 4 + 33, y * 2 + 2, tiles[room[x][y].tile][2])
-            --drawTile(x * 4 + 33, y * 2 + 1, room[x][y].tile - 1)
         end
     end
 
@@ -115,7 +105,7 @@ function drawRoom()
 end
 
 function drawDarkness()
-    distances = {0, 30, 24, 18, 12, 8} -- indexed by floor
+    distances = {0, 28, 24, 18, 12, 8} -- indexed by floor
 
     if (inventory.lantern or currentFloor == 1) then
         return
