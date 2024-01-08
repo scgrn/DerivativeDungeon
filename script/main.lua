@@ -58,15 +58,8 @@ function init()
     findPath(player.pos)
     
     spawnMonster(5, 5, MONSTER_BAT)
-    addItem(4, 4, "o", function()
-        messageBox.open({"You found the OPAL EYE"})
-        inventory.opalEye = true
-    end) 
-    
     --[[
-    addItem(6, 4, "l", function()
-        messageBox.open({"You found a LANTERN to light your way."})
-        inventory.lantern = true
+    addItem(4, 4, "o", function()
     end) 
 
     addItem(7, 5, "k", function()
@@ -79,11 +72,6 @@ function init()
             learnSpell(spell)
         end)
     end
-    
-    addItem(1, 5, "o", function()
-        messageBox.open({"You found the OPAL EYE"})
-        inventory.opalEye = true
-    end) 
     ]]
 
     logEvent("Retrieve the Amulet!")

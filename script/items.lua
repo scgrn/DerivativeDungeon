@@ -1,4 +1,12 @@
-items = {}
+local items = {}
+
+function clearItems()
+    items = {}
+end
+
+function addItems(itemList)
+    items = itemList
+end
 
 function addItem(x, y, representation, effect)
     table.insert(items, {
@@ -10,17 +18,17 @@ function addItem(x, y, representation, effect)
 end
 
 function checkItems(x, y)
-    for key, value in pairs(items) do
-        if (value.x == x and value.y == y) then
-            value.effect()
+    for _, item in pairs(items) do
+        if (item.x == x and item.y == y) then
+            item.effect()
             table.remove(items, key)
         end
     end
 end
 
 function drawItems()
-    for key, value in pairs(items) do
-        printString(value.x * 4 + 35, value.y * 2 + 2, value.representation)
+    for _, item in pairs(items) do
+        printString(item.x * 4 + 35, item.y * 2 + 2, item.representation)
     end
 end
 

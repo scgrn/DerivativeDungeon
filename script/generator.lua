@@ -130,8 +130,6 @@ function visit(x, y)
 end
 
 function generateFloor(floor)
-    local deadEnds = {}
-
     local failedGenerations = 0
     repeat
         local okay = true
@@ -158,6 +156,9 @@ function generateFloor(floor)
 
                     -- if true do not generate a room here
                     blocked = false,
+                    
+                    items = {},
+                    monsters = {},
                 }
             end
         end
@@ -230,12 +231,12 @@ function generateFloor(floor)
         potential = {}
         for x = 1, DUNGEON_WIDTH do
             for y = 1, DUNGEON_HEIGHT do
-                local exits = (grid[x][y].n and 1 or 0)+
+                grid[x][y].exits = (grid[x][y].n and 1 or 0)+
                     (grid[x][y].s and 1 or 0) +
                     (grid[x][y].e and 1 or 0) +
                     (grid[x][y].w and 1 or 0)
 
-                if (not grid[x][y].blocked and exits == 1 and (floor ~=1 or x ~= 3 or y ~= 5)) then
+                if (not grid[x][y].blocked and grid[x][y].exits == 1 and (floor ~=1 or x ~= 3 or y ~= 5)) then
                     table.insert(potential, {x = x, y = y})
                 end
             end
@@ -248,9 +249,10 @@ function generateFloor(floor)
                 failedGenerations = failedGenerations + 1
             end
         else
-            deadEnds = potential
+            grid.deadEnds = potential
         end
     until okay
+
     failedGenerationsString = failedGenerationsString .. failedGenerations
     if (floor == FLOORS) then
         failedGenerationsString = failedGenerationsString .. ")"
@@ -259,16 +261,16 @@ function generateFloor(floor)
     end
     
     --  place items in dead ends
-    scramble(deadEnds)
+    scramble(grid.deadEnds)
     
     if (floor > 1) then
-        grid.up = table.remove(deadEnds)
+        grid.up = table.remove(grid.deadEnds)
     else
         grid.up = nil
     end
     
     if (floor < FLOORS) then
-        grid.down = table.remove(deadEnds)
+        grid.down = table.remove(grid.deadEnds)
     else
         grid.down = nil
     end
@@ -339,6 +341,8 @@ function clearRoom()
         messageShown = false
     }
     room.pillars = {}
+    
+    clearItems()
 end
 
 local function addPillar(x1, y1, x2, y2)
@@ -488,6 +492,20 @@ function generateRoom(x, y)
             end
         end
     end
+    
+    --  add items
+    for _, item in pairs(grid[x][y].items) do
+        if (item.x == 0 and item.y == 0) then
+            local x, y
+            repeat
+                x = math.random(2, 10)
+                y = math.random(2, 10)
+            until (not room[x][y].solid)
+            item.x = x
+            item.y = y
+        end
+    end
+    addItems(grid[x][y].items)
 end
 
 local function checkTile(x, y)
@@ -529,13 +547,78 @@ function marchSquares()
     end
 end
 
+function placeItems()
+    --  place amulet
+    local room = table.remove(dungeon[FLOORS].deadEnds)
+
+    table.insert(dungeon[FLOORS][room.x][room.y].items, {
+        x = 5,
+        y = 5,
+        representation = 'a',
+        effect = function()
+            inventory.amulet = true
+            messageBox.open({"You found the AMULET!", "", "You feel protected"})
+            player.hp = player.maxHp
+            player.mp = player.maxMp
+            -- TODO: spawn new monsters
+        end,
+    })
+    
+    --  place lantern
+    local lanternFloor = math.random(3, 4)
+    room = table.remove(dungeon[lanternFloor].deadEnds)
+
+    table.insert(dungeon[lanternFloor][room.x][room.y].items, {
+        x = 5,
+        y = 5,
+        representation = 'l',
+        effect = function()
+            messageBox.open({"You found a LANTERN to light your way."})
+            inventory.lantern = true
+        end,
+    })
+    
+    --  place opal eye
+    local opalEyeFloor = lanternFloor
+    while (opalEyeFloor == lanternFloor) do
+        opalEyeFloor = math.random(3, 5)
+    end
+    -- find random room
+
+    repeat
+        local okay = true
+
+        room.x = math.random(1, DUNGEON_WIDTH)
+        room.y = math.random(1, DUNGEON_HEIGHT)
+        
+        if (dungeon[opalEyeFloor][room.x][room.y].blocked or dungeon[opalEyeFloor][room.x][room.y].exits < 2) then
+            okay = false
+        end
+    until okay
+    table.insert(dungeon[opalEyeFloor][room.x][room.y].items, {
+        x = 0,
+        y = 0,
+        representation = 'o',
+        effect = function()
+            messageBox.open({"You found the OPAL EYE"})
+            inventory.opalEye = true
+        end,
+    })
+end
+
+function placeSpellbooks()
+end
+
 function generateDungeon()
     dungeon = {}
     for floor = 1, FLOORS do
         dungeon[floor] = generateFloor(floor)
     end
-    grid = dungeon[currentFloor]
-
     -- logEvent("Fails: " .. failedGenerationsString)
+
+    placeItems()
+    placeSpellbooks()
+
+    grid = dungeon[currentFloor]
 end
 
