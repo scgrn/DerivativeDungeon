@@ -223,7 +223,7 @@ function update()
     automap.render()
     
     if (animating) then
-        delay(50);
+        delay(10);
     else
         ch = getch()
         -- logEvent("Scancode: " .. ch)

@@ -40,7 +40,17 @@ static int luaPrintString(lua_State* luaVM) {
     int y = (int)lua_tonumber(luaVM, 2);
     const char *str = lua_tostring(luaVM, 3);
 
+#ifdef WIN32
+    int str_len = strlen(str) + 1;
+    int w_len = MultiByteToWideChar(CP_UTF8, 0, str, str_len, NULL, 0);
+
+    WCHAR str_w[w_len];
+    MultiByteToWideChar(CP_UTF8, 0, str, str_len, &str_w, w_len);
+
+    mvaddwstr(y, x, str_w);
+#else
     mvprintw(y, x, str);
+#endif
 
     return 0;
 }
@@ -110,7 +120,7 @@ int luaGetch(lua_State* luaVM) {
 
 int luaDelay(lua_State* luaVM) {
     int ms = (int)lua_tonumber(luaVM, 1);
-    usleep(ms * 100);
+    napms(ms);
 
     return 0;
 }
@@ -148,7 +158,7 @@ void execute(const char* command) {
     if (!luaErrorFlag) {
         lua_pushcfunction(luaVM, traceback);
         if (luaL_loadstring(luaVM, command) || lua_pcall(luaVM, 0, LUA_MULTRET, lua_gettop(luaVM) - 1)) {
-            luaErrorMsg = lua_tostring(luaVM, -1);
+            luaErrorMsg = (char*)lua_tostring(luaVM, -1);
             lua_pop(luaVM, 2);
 
             killCurses();
@@ -184,7 +194,7 @@ static int luaLoadScript(lua_State* luaVM) {
         lua_pushvalue(luaVM, -1);
         error = lua_pcall(luaVM, 0, 0, 0);
         if (error) {
-            luaErrorMsg = lua_tostring(luaVM, -1);
+            luaErrorMsg = (char*)lua_tostring(luaVM, -1);
             lua_pop(luaVM, 1);
 
             killCurses();
@@ -250,10 +260,7 @@ int main(int argc, char* argv[]) {
     }
 
     killCurses();
-    
-    printf("└───\n");
-    printf("╚═══\n");
-    
+
     return 0;
 }
 
