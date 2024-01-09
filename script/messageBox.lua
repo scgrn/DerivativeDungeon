@@ -39,6 +39,17 @@ function messageBox.setMessage(message)
 end
 
 function messageBox.open(message)
+    --  wait until no keys are being held
+    setBlockingInput(false);
+    ch = 0
+    while (ch ~= -1) do
+        ch = getch()
+        logEvent("Chr: " .. ch)
+        delay(1)
+    end
+    --while (getch() ~= -1) do end
+    setBlockingInput(true)
+
     messageBox.state = messageBox.States.OPENING
     messageBox.currentSize = 0
     messageBox.setMessage(message)

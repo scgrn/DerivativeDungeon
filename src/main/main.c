@@ -72,7 +72,7 @@ static int luaRectangle(lua_State* luaVM) {
 
     bool doubleLines = false;
     if (lua_gettop(luaVM) >= 5) {
-        doubleLines = (bool)lua_toboolean(luaVM, 5);
+        doubleLines = lua_toboolean(luaVM, 5);
     }
     
     if (doubleLines) {
@@ -107,6 +107,13 @@ static int luaRectangle(lua_State* luaVM) {
         mvaddch(y1, x2, ACS_URCORNER);
         mvaddch(y2, x2, ACS_LRCORNER);
     }
+
+    return 0;
+}
+
+int luaSetBlockingInput(lua_State* luaVM) {
+    bool block = lua_toboolean(luaVM, 1);
+    nodelay(stdscr, !block);
 
     return 0;
 }
@@ -226,6 +233,7 @@ int main(int argc, char* argv[]) {
     lua_register(luaVM, "printString", luaPrintString);
     lua_register(luaVM, "printChar", luaPrintChar);
     lua_register(luaVM, "rectangle", luaRectangle);
+    lua_register(luaVM, "setBlockingInput", luaSetBlockingInput);
     lua_register(luaVM, "getch", luaGetch);
     lua_register(luaVM, "delay", luaDelay);
     lua_register(luaVM, "quit", luaQuit);
