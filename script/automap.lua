@@ -78,6 +78,14 @@ function automap.render()
             end
         end
 
+        --  draw statue and pool
+        if (dungeon.statue.floor == viewingFloor and dungeon.statue.found and inventory.opalEye) then
+            printString(dungeon.statue.x * 6 + 21, dungeon.statue.y * 3 + 3, "e")
+        end
+        if (dungeon.pool.floor == viewingFloor and dungeon.pool.found and inventory.opalEye) then
+            printString(dungeon.pool.x * 6 + 21, dungeon.pool.y * 3 + 3, "p")
+        end
+
         --  you are here
         if (viewingFloor == currentFloor) then
             printString(player.roomX * 6 + 21, player.roomY * 3 + 3, "@")
