@@ -392,7 +392,7 @@ function generateRoom(x, y)
             local xs = room.xs
             local ys = room.ys
             if (math.random() < 0.65 or (xs == 3 and ys == 3)) then
-                if (math.random() < 0.35) then
+                if ((player.roomX == 2 or player.roomX == 4) and (player.roomY == 2 or player.roomY == 4)) then
                     --  center pillar
 
                     --  (as long as we're not in the first room)
