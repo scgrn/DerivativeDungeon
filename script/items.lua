@@ -115,7 +115,7 @@ function placeItems()
         y = room.y,
         found = false,
     }
-    logEvent("Pool: ".. poolFloor .. " (" .. room.x .. ", " .. room.y .. ")")
+    -- logEvent("Pool: ".. poolFloor .. " (" .. room.x .. ", " .. room.y .. ")")
     table.insert(dungeon[1][room.x][room.y].items, {
         x = 5,
         y = 5,
@@ -138,7 +138,7 @@ function placeItems()
         y = room.y,
         found = false,
     }
-    logEvent("Statue: " .. statueFloor .. " (" .. room.x .. ", " .. room.y .. ")")
+    -- logEvent("Statue: " .. statueFloor .. " (" .. room.x .. ", " .. room.y .. ")")
     table.insert(dungeon[1][room.x][room.y].items, {
         x = 5,
         y = 5,

@@ -343,6 +343,7 @@ function clearRoom()
     room.pillars = {}
     
     clearItems()
+    tiles[16] = ceilingTiles[currentFloor]
 end
 
 local function addPillar(x1, y1, x2, y2)
