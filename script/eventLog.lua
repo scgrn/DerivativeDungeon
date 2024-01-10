@@ -1,4 +1,4 @@
-local index
+local index = 0
 
 function clearEventLog()
     eventLog = {}

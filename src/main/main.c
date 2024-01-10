@@ -6,11 +6,13 @@
 #include "lua-5.3.5/src/lauxlib.h"
 
 #ifdef WIN32
-#include <windows.h>
 #include <ncursesw/ncurses.h>
+#include <windows.h>
 #else
 #include "ncurses.h"
 #endif
+
+#include "random.h"
 
 lua_State* luaVM;
 bool luaErrorFlag = false;
@@ -41,13 +43,13 @@ static int luaPrintString(lua_State* luaVM) {
     const char *str = lua_tostring(luaVM, 3);
 
 #ifdef WIN32
-    int str_len = strlen(str) + 1;
-    int w_len = MultiByteToWideChar(CP_UTF8, 0, str, str_len, NULL, 0);
+    int strLength = strlen(str) + 1;
+    int wideLength = MultiByteToWideChar(CP_UTF8, 0, str, strLength, NULL, 0);
 
-    WCHAR str_w[w_len];
-    MultiByteToWideChar(CP_UTF8, 0, str, str_len, &str_w, w_len);
+    WCHAR wideStr[wideLength];
+    MultiByteToWideChar(CP_UTF8, 0, str, strLength, (LPWSTR)&wideStr, wideLength);
 
-    mvaddwstr(y, x, str_w);
+    mvaddwstr(y, x, wideStr);
 #else
     mvprintw(y, x, str);
 #endif
@@ -136,6 +138,32 @@ int luaQuit(lua_State* luaVM) {
     done = true;
 
     return 0;
+}
+
+int luaRandomSeed(lua_State* luaVM) {
+    if (lua_gettop(luaVM) >= 1) {
+        unsigned int seed = (unsigned int)lua_tointeger(luaVM, 1);
+        rndSeed(seed);
+    } else {
+        rndSeedTime();
+    }
+
+    return 0;
+}
+
+int luaRandom(lua_State* luaVM) {
+    if (lua_gettop(luaVM) == 1) {
+        unsigned int n = (unsigned int)lua_tointeger(luaVM, 1);
+        lua_pushinteger(luaVM, rndInt(n) + 1);
+    } else if (lua_gettop(luaVM) >= 2) {
+        int lb = (int)lua_tointeger(luaVM, 1);
+        int ub = (int)lua_tointeger(luaVM, 2);
+        lua_pushinteger(luaVM, rndIntRange(lb, ub));
+    } else {
+        lua_pushnumber(luaVM, rndDouble());
+    }
+
+    return 1;
 }
 
 static int traceback(lua_State *luaVM) {
@@ -238,7 +266,9 @@ int main(int argc, char* argv[]) {
     lua_register(luaVM, "delay", luaDelay);
     lua_register(luaVM, "quit", luaQuit);
     lua_register(luaVM, "loadScript", luaLoadScript);
-
+    lua_register(luaVM, "randomSeed", luaRandomSeed);
+    lua_register(luaVM, "random", luaRandom);
+    
     execute("loadScript('../script/main.lua')");
     if (!luaErrorFlag) {
         execute("init()");

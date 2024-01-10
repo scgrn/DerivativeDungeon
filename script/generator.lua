@@ -12,8 +12,8 @@ local failedGenerationsString = "("
 
 function scramble(a)
     for i = 1, #a do
-        index1 = math.random(#a)
-        index2 = math.random(#a)
+        index1 = random(#a)
+        index2 = random(#a)
         local temp = a[index1]
         a[index1] = a[index2]
         a[index2] = temp
@@ -22,61 +22,61 @@ end
 
 function erodeCorners()
     -- erode NW corner
-    if (math.random() < 0.5) then
+    if (random() < 0.5) then
         grid[1][1].blocked = true
-        if (math.random() < 0.5) then
+        if (random() < 0.5) then
             grid[2][2].blocked = true
         end
     end
-    if (math.random() < 0.5) then
+    if (random() < 0.5) then
         grid[2][1].blocked = true
-    elseif (math.random() < 0.5) then
+    elseif (random() < 0.5) then
         grid[1][2].blocked = true
     end
 
     -- erode NE corner
-    if (math.random() < 0.5) then
+    if (random() < 0.5) then
         grid[5][1].blocked = true
-        if (math.random() < 0.5) then
+        if (random() < 0.5) then
             grid[4][2].blocked = true
         end
     end
-    if (math.random() < 0.5) then
+    if (random() < 0.5) then
         grid[4][1].blocked = true
-    elseif (math.random() < 0.5) then
+    elseif (random() < 0.5) then
         grid[5][2].blocked = true
     end
 
     -- erode SW corner
-    if (math.random() < 0.5) then
+    if (random() < 0.5) then
         grid[1][5].blocked = true
-        if (math.random() < 0.5) then
+        if (random() < 0.5) then
             grid[2][4].blocked = true
         end
     end
-    if (math.random() < 0.5) then
+    if (random() < 0.5) then
         grid[2][5].blocked = true
-    elseif (math.random() < 0.5) then
+    elseif (random() < 0.5) then
         grid[1][4].blocked = true
     end
 
     -- erode SE corner
-    if (math.random() < 0.5) then
+    if (random() < 0.5) then
         grid[5][5].blocked = true
-        if (math.random() < 0.5) then
+        if (random() < 0.5) then
             grid[4][4].blocked = true
         end
     end
-    if (math.random() < 0.5) then
+    if (random() < 0.5) then
         grid[4][5].blocked = true
-    elseif (math.random() < 0.5) then
+    elseif (random() < 0.5) then
         grid[5][4].blocked = true
     end
 end
 
 function visit(x, y)
     grid[x][y].visited = true
-    grid[x][y].seed = math.random(256 ^ 4)
+    grid[x][y].seed = random(256 ^ 4)
     roomsVisited = roomsVisited + 1
 
     repeat
@@ -103,7 +103,7 @@ function visit(x, y)
         end
 
         if (#potential > 0) then
-            local index = math.random(#potential)
+            local index = random(#potential)
             nx = potential[index][1]
             ny = potential[index][2]
 
@@ -165,7 +165,7 @@ function generateFloor(floor)
 
         erodeCorners()
         for i = 1, 2 do
-            grid[math.random(2, DUNGEON_WIDTH - 1)][math.random(2, DUNGEON_HEIGHT - 1)].blocked = true
+            grid[random(2, DUNGEON_WIDTH - 1)][random(2, DUNGEON_HEIGHT - 1)].blocked = true
         end
 
         -- count rooms
@@ -184,8 +184,8 @@ function generateFloor(floor)
             y = math.floor(DUNGEON_HEIGHT / 2)
         }
         while (grid[start.x][start.y].blocked) do
-            start.x = math.random(1, DUNGEON_WIDTH)
-            start.y = math.random(1, DUNGEON_HEIGHT)
+            start.x = random(1, DUNGEON_WIDTH)
+            start.y = random(1, DUNGEON_HEIGHT)
         end
 
         roomsVisited = 0
@@ -214,7 +214,7 @@ function generateFloor(floor)
         end
         for i = 1, math.floor(totalRooms / 5) do
             if (#potential >= 1) then
-                local index = math.random(#potential)
+                local index = random(#potential)
                 r = potential[index]
                 if (r[3] == 0) then
                     grid[r[1] ][r[2] ].s = true
@@ -361,7 +361,7 @@ function generateRoom(x, y)
 
     clearRoom()
 
-    math.randomseed(grid[x][y].seed)
+    randomSeed(grid[x][y].seed)
     local n = grid[x][y].n
     local s = grid[x][y].s
     local e = grid[x][y].e
@@ -383,22 +383,22 @@ function generateRoom(x, y)
         mapRect(2, 2, 7, 7)
     else
         --  carve out center
-        if (math.random() < 0.75) then
-            room.xs = math.random(2, 3)
-            room.ys = math.random(2, 3)
+        if (random() < 0.75) then
+            room.xs = random(2, 3)
+            room.ys = random(2, 3)
             mapRect(4 - room.xs, 4 - room.ys, 5 + room.xs, 5 + room.ys)
 
             -- pillars
             local xs = room.xs
             local ys = room.ys
-            if (math.random() < 0.65 or (xs == 3 and ys == 3)) then
+            if (random() < 0.65 or (xs == 3 and ys == 3)) then
                 if ((player.roomX == 2 or player.roomX == 4) and (player.roomY == 2 or player.roomY == 4)) then
                     --  center pillar
 
                     --  (as long as we're not in the first room)
                     if (player.roomX ~= 3 or player.roomY ~= 5) then
-                        xs = math.random(1, xs - 1)
-                        ys = math.random(1, ys - 1)
+                        xs = random(1, xs - 1)
+                        ys = random(1, ys - 1)
                         addPillar(5 - xs, 5 - ys, 5 + xs, 5 + ys)
                     end
                 else
@@ -498,8 +498,8 @@ function generateRoom(x, y)
         if (item.x == 0 and item.y == 0) then
             local x, y
             repeat
-                x = math.random(2, 10)
-                y = math.random(2, 10)
+                x = random(2, 10)
+                y = random(2, 10)
             until (not room[x][y].solid)
             item.x = x
             item.y = y

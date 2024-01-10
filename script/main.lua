@@ -44,10 +44,10 @@ function init()
     loadScript("../script/eventLog.lua")()
     loadScript("../script/automap.lua")()
 
-    math.randomseed(os.time())
-    masterSeed = math.random(256 ^ 4)
+    randomSeed()
+    masterSeed = random(256 ^ 4 - 1)
     rseed = masterSeed
-    math.randomseed(rseed)
+    randomSeed(rseed)
 
     currentFloor = 1
     deepestFloor = 1

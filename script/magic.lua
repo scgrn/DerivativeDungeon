@@ -67,7 +67,7 @@ function openSpellbook()
 end
 
 function placeSpellbooks()
-    local skip = math.random(1, 5)
+    local skip = random(1, 5)
     
     local spellMap = {1, 2, 3, 4}
     scramble(spellMap)

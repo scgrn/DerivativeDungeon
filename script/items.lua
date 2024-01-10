@@ -65,7 +65,7 @@ function placeItems()
     })
     
     --  place lantern
-    local lanternFloor = math.random(3, 4)
+    local lanternFloor = random(3, 4)
     room = table.remove(dungeon[lanternFloor].deadEnds)
 
     table.insert(dungeon[lanternFloor][room.x][room.y].items, {
@@ -81,15 +81,15 @@ function placeItems()
     --  place opal eye
     local opalEyeFloor = lanternFloor
     while (opalEyeFloor == lanternFloor) do
-        opalEyeFloor = math.random(3, 5)
+        opalEyeFloor = random(3, 5)
     end
     --  find random room
     --  TODO: factor this out for rusty keys
     repeat
         local okay = true
 
-        room.x = math.random(1, DUNGEON_WIDTH)
-        room.y = math.random(1, DUNGEON_HEIGHT)
+        room.x = random(1, DUNGEON_WIDTH)
+        room.y = random(1, DUNGEON_HEIGHT)
         
         if (dungeon[opalEyeFloor][room.x][room.y].blocked or dungeon[opalEyeFloor][room.x][room.y].exits < 2) then
             okay = false
