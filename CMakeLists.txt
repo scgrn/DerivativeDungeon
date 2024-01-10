@@ -23,10 +23,11 @@ list(REMOVE_ITEM LUA_SOURCE "${VENDOR_DIR}/lua-5.3.5/src/luac.c")
 
 add_executable(${PROJECT_NAME}
     "${PROJECT_SOURCE_DIR}/src/main/main.c"
+    "${PROJECT_SOURCE_DIR}/src/main/random.c"
     "${LUA_SOURCE}"
 )
 
-target_compile_options(${PROJECT_NAME} PRIVATE -finput-charset=UTF-8)
+target_compile_options(${PROJECT_NAME} PRIVATE -finput-charset=UTF-8 -DNCURSES_WIDECHAR)
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC "${PROJECT_SOURCE_DIR}/src/main"
