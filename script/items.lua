@@ -99,7 +99,7 @@ function placeItems()
         -- setting x and y to 0 will have the room generator place it randomly
         x = 0,
         y = 0,
-        representation = 'o',
+        representation = '°',
         effect = function()
             messageBox.open({"You found the OPAL EYE"})
             inventory.opalEye = true
@@ -119,7 +119,7 @@ function placeItems()
     table.insert(dungeon[1][room.x][room.y].items, {
         x = 5,
         y = 5,
-        representation = 'p',
+        representation = 'O',
         effect = function()
             logEvent("You found a pool")
             messageBox.open({"You wade into the SHIMMERING POOL","","Magic fully restored!"})
@@ -142,7 +142,7 @@ function placeItems()
     table.insert(dungeon[1][room.x][room.y].items, {
         x = 5,
         y = 5,
-        representation = 'e',
+        representation = 'Ω',
         effect = function()
             logEvent("You found a statue")
             messageBox.open({"You gaze at the GHOSTLY EFFIGY","","Life fully restored!"})
