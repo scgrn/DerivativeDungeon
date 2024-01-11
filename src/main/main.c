@@ -166,6 +166,25 @@ int luaRandom(lua_State* luaVM) {
     return 1;
 }
 
+static int luaIntToHex(lua_State *luaVM) {
+    unsigned int num = (unsigned int)lua_tointeger(luaVM, 1);
+    
+    static char hex[9];
+    sprintf(hex, "%08X", num);
+
+    lua_pushstring(luaVM, hex);
+
+    return 1;
+}
+
+static int luaHexToInt(lua_State *luaVM) {
+    const char* hex = lua_tostring(luaVM, 1);
+
+    lua_pushinteger(luaVM, (unsigned int)strtoul(hex, NULL, 16));
+    
+    return 1;
+}
+
 static int traceback(lua_State *luaVM) {
     killCurses();
     
@@ -268,6 +287,8 @@ int main(int argc, char* argv[]) {
     lua_register(luaVM, "loadScript", luaLoadScript);
     lua_register(luaVM, "randomSeed", luaRandomSeed);
     lua_register(luaVM, "random", luaRandom);
+    lua_register(luaVM, "intToHex", luaIntToHex);
+    lua_register(luaVM, "hexToInt", luaHexToInt);
     
     execute("loadScript('../script/main.lua')");
     if (!luaErrorFlag) {

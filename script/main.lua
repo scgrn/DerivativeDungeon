@@ -30,6 +30,10 @@ function tableContains(table, value)
     return false
 end
 
+function string.insert(str1, str2, pos)
+    return str1:sub(1, pos) .. str2 .. str1:sub(pos + 1)
+end
+
 function init()
     loadScript("../script/buildstamp.lua")()
     loadScript("../script/messageBox.lua")()
@@ -288,10 +292,12 @@ function update()
                 end
                 
                 if (ch == KEY.V) then
+                    local seed = intToHex(masterSeed)
+                    seed = string.insert(seed, " ", 4)
                     messageBox.open({
                         "Current random seed:",
                         "",
-                        "80A9 45E2"
+                        seed,
                     })
                 end
 
