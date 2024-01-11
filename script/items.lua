@@ -146,7 +146,7 @@ function placeItems()
         effect = function()
             logEvent("You found a statue")
             messageBox.open({"You gaze at the GHOSTLY EFFIGY","","Life fully restored!"})
-            player.mp = player.maxMp
+            player.hp = player.maxHp
             dungeon.statue.found = true
         end,
         permanent = true,

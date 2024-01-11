@@ -134,12 +134,13 @@ function drawDarkness()
         maxY = 23
     end
     for y = 2, minY - 1 do
-        printString(34, y, "                                           ")
+        -- printString(34, y, "                                           ")
+        printString(34, y, string.rep(" ", 44)
     end
 
     for y = minY, maxY do
         for x = 34, 76 do
-            local d = ((playerX - x) * (playerX - x)) + ((playerY - y) * (playerY - y) * 3)
+            local d = ((playerX - x) * (playerX - x)) + ((playerY - y) * (playerY - y) * 4)
             if (d > dist * dist) then
                 printString(x, y, " ")
             end
