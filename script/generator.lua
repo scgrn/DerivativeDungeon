@@ -76,7 +76,7 @@ end
 
 function visit(x, y)
     grid[x][y].visited = true
-    grid[x][y].seed = random(256 ^ 4)
+    grid[x][y].seed = random(256 ^ 4 - 1)
     roomsVisited = roomsVisited + 1
 
     repeat

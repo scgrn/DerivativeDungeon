@@ -134,8 +134,7 @@ function drawDarkness()
         maxY = 23
     end
     for y = 2, minY - 1 do
-        -- printString(34, y, "                                           ")
-        printString(34, y, string.rep(" ", 44)
+        printString(34, y, string.rep(" ", 44))
     end
 
     for y = minY, maxY do
@@ -148,7 +147,7 @@ function drawDarkness()
     end
 
     for y = maxY + 1, 22 do
-        printString(34, y, "                                           ")
+        printString(34, y, string.rep(" ", 44))
     end
 end
 
