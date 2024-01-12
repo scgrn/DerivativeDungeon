@@ -107,7 +107,7 @@ function placeItems()
     })
 
     --  place magic pool
-    local poolFloor = 1
+    local poolFloor = random(2, 5)
     room = table.remove(dungeon[poolFloor].deadEnds)
     dungeon.pool = {
         floor = poolFloor,
@@ -116,7 +116,7 @@ function placeItems()
         found = false,
     }
     -- logEvent("Pool: ".. poolFloor .. " (" .. room.x .. ", " .. room.y .. ")")
-    table.insert(dungeon[1][room.x][room.y].items, {
+    table.insert(dungeon[poolFloor][room.x][room.y].items, {
         x = 5,
         y = 5,
         representation = 'O',
@@ -130,7 +130,10 @@ function placeItems()
     })
 
     --  place life statue
-    local statueFloor = 1
+    local statueFloor = poolFloor
+    while (statueFloor == poolFloor) do
+        statueFloor = random(2, 5)
+    end
     room = table.remove(dungeon[statueFloor].deadEnds)
     dungeon.statue = {
         floor = statueFloor,
@@ -139,7 +142,7 @@ function placeItems()
         found = false,
     }
     -- logEvent("Statue: " .. statueFloor .. " (" .. room.x .. ", " .. room.y .. ")")
-    table.insert(dungeon[1][room.x][room.y].items, {
+    table.insert(dungeon[statueFloor][room.x][room.y].items, {
         x = 5,
         y = 5,
         representation = 'Ω',
