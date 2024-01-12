@@ -17,12 +17,13 @@ messageBox = {
 }
 
 function messageBox.setMessage(message)
-    -- TODO: enfore message is table
+    if (type(message) ~= "table") then
+        error("Message needs to be a table of strings!")
+    end
 
     messageBox.message = message
-
     messageBox.maxSize = #message + 3
-    
+
     local longestMessage = 20
     for k, v in pairs(message) do
         longestMessage = math.max(#v + 6, longestMessage)
@@ -41,13 +42,7 @@ end
 function messageBox.open(message)
     --  wait until no keys are being held
     setBlockingInput(false);
-    ch = 0
-    while (ch ~= -1) do
-        ch = getch()
-        logEvent("Chr: " .. ch)
-        delay(1)
-    end
-    --while (getch() ~= -1) do end
+    while (getch() ~= -1) do end
     setBlockingInput(true)
 
     messageBox.state = messageBox.States.OPENING

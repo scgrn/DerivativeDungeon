@@ -36,13 +36,17 @@ function init()
     loadScript("../script/automap.lua")()
 
     randomSeed()
-    masterSeed = random(256 ^ 4 - 1)
-    rseed = masterSeed
-    randomSeed(rseed)
+    newGame(random(256 ^ 4 - 1))
+end
+
+function newGame(seed)
+    masterSeed = seed
+    randomSeed(masterSeed)
 
     currentFloor = 1
     deepestFloor = 1
 
+    resetPlayer()
     clearEventLog()
     generateDungeon()
     generateRoom(player.roomX, player.roomY)
@@ -126,7 +130,7 @@ function drawDarkness()
 
     for y = minY, maxY do
         for x = 34, 76 do
-            local d = ((playerX - x) * (playerX - x)) + ((playerY - y) * (playerY - y) * 4)
+            local d = ((playerX - x) * (playerX - x)) + ((playerY - y) * (playerY - y) * 4.5)
             if (d > dist * dist) then
                 printString(x, y, " ")
             end

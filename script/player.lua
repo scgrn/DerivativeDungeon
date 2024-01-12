@@ -1,31 +1,33 @@
-player = {
-    pos = {
-        x = 5,
-        y = 8
-    },
+function resetPlayer()
+    player = {
+        pos = {
+            x = 5,
+            y = 8
+        },
 
-    lifeLevel = 1,
-    magicLevel = 1,
-    attackLevel = 1,
+        lifeLevel = 1,
+        magicLevel = 1,
+        attackLevel = 1,
 
-    hp = 64,
-    maxHp = 64,
+        hp = 64,
+        maxHp = 64,
 
-    mp = 64,
-    maxMp = 64,
+        mp = 64,
+        maxMp = 64,
 
-    exp = 0,
-    nextLife = {50, 150, 400, 800, 1500, 2500, 4000},
-    nextMagic = {100, 300, 700, 1200, 2200, 3500, 6000},
-    nextAttack = {200, 500, 1000, 2000, 3000, 5000, 8000},
+        exp = 0,
+        nextLife = {50, 150, 400, 800, 1500, 2500, 4000},
+        nextMagic = {100, 300, 700, 1200, 2200, 3500, 6000},
+        nextAttack = {200, 500, 1000, 2000, 3000, 5000, 8000},
 
-    damage = {8, 12, 16, 24, 32, 48, 64, 96},
+        damage = {8, 12, 16, 24, 32, 48, 64, 96},
 
-    next = 50,
-    
-    roomX = 3,
-    roomY = 5
-}
+        next = 50,
+        
+        roomX = 3,
+        roomY = 5
+    }
+end
 
 function ascendStairs()
     if (currentFloor > 1) then
@@ -118,7 +120,7 @@ function movePlayer(ch)
     end
 
     checkItems(player.pos.x, player.pos.y)
-    
+
     --  check stairs
     --  TODO: make into items
     if (grid.down ~= nil) then
