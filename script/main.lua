@@ -92,7 +92,7 @@ function drawRoom()
     --  draw pillars
     for _, pillar in pairs(room.pillars) do
         local doubleLines = (pillar.x1 ~= pillar.x2)
-        rectangle(pillar.x1 * 4 + 33, pillar.y1 * 2 + 1, pillar.x2 * 4 + 36, pillar.y2 * 2 + 3, doubleLines)
+        rectangle(pillar.x1 * 4 + 33, pillar.y1 * 2 + 1, pillar.x2 * 4 + 36, pillar.y2 * 2 + 3, doubleLines, not doubleLines)
     end
         
     --  draw stairs

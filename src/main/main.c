@@ -76,7 +76,20 @@ static int luaRectangle(lua_State* luaVM) {
     if (lua_gettop(luaVM) >= 5) {
         doubleLines = lua_toboolean(luaVM, 5);
     }
-    
+
+    bool fill = false;
+    if (lua_gettop(luaVM) >= 6) {
+        fill = lua_toboolean(luaVM, 6);
+    }
+
+    if (fill) {
+        for (int x = x1 + 1; x < x2; x++) {
+            for (int y = y1 + 1; y < y2; y++) {
+                mvaddch(y, x, ' ');
+            }
+        }
+    }
+
     if (doubleLines) {
         const wchar_t* wstr[] = {
             L"╔",
