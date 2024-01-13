@@ -30,6 +30,7 @@ void startCurses() {
     noecho();
     cbreak();
     curs_set(0);
+    set_escdelay(20);
     keypad(stdscr, TRUE);
 }
 
