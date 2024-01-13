@@ -7,7 +7,11 @@ local function generate()
     local grid = dungeon[viewingFloor]
     
     if (viewingFloor == currentFloor) then
-        table.insert(ret, "Floor " .. viewingFloor .. "                              ")
+        if (deepestFloor > 1 and not automap.pressed) then
+            table.insert(ret, "Floor " .. viewingFloor .. "    [UP]/[DOWN] - change floor")
+        else
+            table.insert(ret, "Floor " .. viewingFloor .. "                              ")
+        end
     else
         table.insert(ret, "Floor " .. viewingFloor .. "                    Current: " .. currentFloor .. "")
     end
@@ -48,7 +52,8 @@ local function generate()
 end
 
 function automap.open()
-    showingMap = true
+    automap.showing = true
+    automap.pressed = false
     viewingFloor = currentFloor
     messageBox.open(generate())
 end
@@ -57,7 +62,7 @@ function automap.render()
     local grid = dungeon[viewingFloor]
     
     -- draw map
-    if (showingMap and messageBox.state == messageBox.States.OPEN) then
+    if (automap.showing and messageBox.state == messageBox.States.OPEN) then
         for x = 1, DUNGEON_WIDTH do
             for y = 1, DUNGEON_HEIGHT do
                 if (grid[x][y].visited) then
@@ -104,6 +109,7 @@ end
 function automap.checkKeypress(ch)
     if (tableContains(KEY.UP, ch)) then
         if (viewingFloor > 1) then
+            automap.pressed = true
             viewingFloor = viewingFloor - 1
             messageBox.setMessage(generate())
         end
@@ -112,6 +118,7 @@ function automap.checkKeypress(ch)
 
     if (tableContains(KEY.DOWN, ch)) then
         if (viewingFloor < deepestFloor) then
+            automap.pressed = true
             viewingFloor = viewingFloor + 1
             messageBox.setMessage(generate())
         end
@@ -119,6 +126,6 @@ function automap.checkKeypress(ch)
     end
 
     messageBox.close()
-    showingMap = false
+    automap.showing = false
 end
 

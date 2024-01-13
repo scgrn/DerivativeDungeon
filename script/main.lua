@@ -228,7 +228,7 @@ function update()
         ch = getch()
         -- logEvent("Scancode: " .. ch)
 
-        if (showingMap) then
+        if (automap.showing) then
             automap.checkKeypress(ch)
         elseif (spellbook.showing) then
             spellbook.checkInput(ch)
