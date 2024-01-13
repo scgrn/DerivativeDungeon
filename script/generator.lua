@@ -10,16 +10,6 @@ MIN_DEAD_ENDS = 5
 local roomsVisited = 0
 local failedGenerationsString = "("
 
-function scramble(a)
-    for i = 1, #a do
-        index1 = random(#a)
-        index2 = random(#a)
-        local temp = a[index1]
-        a[index1] = a[index2]
-        a[index2] = temp
-    end
-end
-
 function erodeCorners()
     -- erode NW corner
     if (random() < 0.5) then
@@ -252,7 +242,7 @@ function generateFloor(floor)
             grid.deadEnds = potential
         end
     until okay
-
+    
     failedGenerationsString = failedGenerationsString .. failedGenerations
     if (floor == FLOORS) then
         failedGenerationsString = failedGenerationsString .. ")"
@@ -260,7 +250,7 @@ function generateFloor(floor)
         failedGenerationsString = failedGenerationsString .. ","
     end
     
-    --  place items in dead ends
+    --  place stairs in dead ends
     scramble(grid.deadEnds)
     
     if (floor > 1) then
@@ -493,7 +483,7 @@ function generateRoom(x, y)
             end
         end
     end
-    
+
     --  add items
     for _, item in pairs(grid[x][y].items) do
         if (item.x == 0 and item.y == 0) then
@@ -556,7 +546,6 @@ function generateDungeon()
     -- logEvent("Fails: " .. failedGenerationsString)
 
     placeItems()
-    placeSpellbooks()
 
     grid = dungeon[currentFloor]
 end

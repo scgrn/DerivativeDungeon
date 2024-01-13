@@ -47,6 +47,9 @@ function newGame(seed)
     deepestFloor = 1
 
     resetPlayer()
+    resetInventory()
+    resetSpellbook()
+    
     clearEventLog()
     generateDungeon()
     generateRoom(player.roomX, player.roomY)
@@ -262,6 +265,8 @@ function update()
 
                 --  hot reload
                 if (ch == KEY.R) then
+                    --newGame(random(256 ^ 4 - 1))
+                    
                     loadScript("../script/main.lua")
                     init()
                 end

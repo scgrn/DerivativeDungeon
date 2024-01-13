@@ -6,10 +6,14 @@ spells = {
     { name = "DEATHSPELL", spellbook = "Tome of Decimation"},
 }
 
-for i = 1, #spells do
-    spells[i].learned = false
+local selected = 0
+
+function resetSpellbook()
+    for i = 1, #spells do
+        spells[i].learned = false
+    end
+    selected = 0
 end
-selected = 0
 
 function learnSpell(spell)
     logEvent("You found a spellbook")
@@ -30,6 +34,32 @@ function castSpell()
         messageBox.open({
             "No spell selected!",
         })
+    end
+
+    --  shield
+    if (selected == 1) then
+        player.mp = player.mp - 8
+    end
+
+    --  life
+    if (selected == 2) then
+        player.hp = player.hp + 32
+        if (player.hp > player.maxHp) then
+            player.hp = player.maxHp
+        end
+        player.mp = player.mp - 8
+    end
+
+    --  fire
+    if (selected == 3) then
+    end
+
+    --  teleport
+    if (selected == 4) then
+    end
+
+    --  deathspell
+    if (selected == 5) then
     end
 end
 

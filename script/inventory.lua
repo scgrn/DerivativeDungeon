@@ -1,14 +1,16 @@
-inventory = {
-    rustyKey = 0,
-    ironKey =   false,
-    silverKey = false,
-    goldKey = false,
-    
-    lantern = false,
-    opalEye = false,
-    
-    amulet = false,
-}
+function resetInventory()
+    inventory = {
+        rustyKey = 0,
+        ironKey =   false,
+        silverKey = false,
+        goldKey = false,
+        
+        lantern = false,
+        opalEye = false,
+        
+        amulet = false,
+    }
+end
 
 function showInventory()
     local display = {
