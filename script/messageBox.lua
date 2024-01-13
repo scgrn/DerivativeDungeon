@@ -32,11 +32,7 @@ function messageBox.setMessage(message)
     messageBox.x1 = 40 - (longestMessage / 2)
     messageBox.x2 = 80 - messageBox.x1
 
-    blankString = " "
-    local width = messageBox.x2 - messageBox.x1
-    for i = 1, width - 1 do
-        blankString = blankString .. " "
-    end
+    blankString = string.rep(" ", messageBox.x2 - messageBox.x1)
 end
 
 function messageBox.open(message)
@@ -87,8 +83,8 @@ function messageBox.render()
         if (messageBox.state == messageBox.States.OPEN) then
             local y = y1 + 2
             for k, v in pairs(messageBox.message) do
-                    printString(40 - (#v / 2), y, v)
-                    y = y + 1
+                printString(40 - (math.floor(#v / 2.0)), y, v)
+                y = y + 1
             end
         end
     end

@@ -89,7 +89,7 @@ function spellbook.open()
 
     local display = {
         "",
-        "~  Spellbook  ~",
+        "~ ~  Spellbook  ~ ~",
         "",
     }
 
@@ -128,8 +128,8 @@ end
 function spellbook.render()
     if (spellbook.showing and messageBox.state == messageBox.States.OPEN) then
         local y = spellbook.choice * 2 + 6
-        printString(30, y, "►")
-        printString(49, y, "◄")
+        printString(31, y, "►")
+        printString(48, y, "◄")
     end
 end
 

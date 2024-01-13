@@ -8,17 +8,17 @@ local function generate()
     
     if (viewingFloor == currentFloor) then
         if (deepestFloor > 1 and not automap.pressed) then
-            table.insert(ret, "Floor " .. viewingFloor .. "    [UP]/[DOWN] - change floor")
+            table.insert(ret, "Floor " .. viewingFloor .. "     [UP]/[DOWN] - change floor")
         else
-            table.insert(ret, "Floor " .. viewingFloor .. "                              ")
+            table.insert(ret, "Floor " .. viewingFloor .. "                               ")
         end
     else
-        table.insert(ret, "Floor " .. viewingFloor .. "                    Current: " .. currentFloor .. "")
+        table.insert(ret, "Floor " .. viewingFloor .. "                     Current: " .. currentFloor .. "")
     end
     table.insert(ret, "")
 
     for y = 1, DUNGEON_HEIGHT do
-        local s = "    "
+        local s = "   "
         for x = 1, DUNGEON_WIDTH - 1 do
             if (grid[x][y].e and (grid[x][y].visited or grid[x + 1][y].visited)) then
                 s = s .. "___   "
@@ -43,7 +43,7 @@ local function generate()
         end
     end
     if (viewingFloor == 1) then
-        table.insert(ret, "|")
+        table.insert(ret, "| ")
     else
         table.insert(ret, "")
     end
@@ -97,11 +97,11 @@ function automap.render()
         end
 
         if (viewingFloor > 1) then
-            printString(24, 3, "▲")
+            printString(23, 3, "▲")
         end
 
         if (viewingFloor < deepestFloor) then
-            printString(24, 5, "▼")
+            printString(23, 5, "▼")
         end
     end
 end
