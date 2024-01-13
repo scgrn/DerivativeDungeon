@@ -334,6 +334,13 @@ function clearRoom()
     
     clearItems()
     tiles[16] = ceilingTiles[currentFloor]
+
+    if (inventory.lanternTimer > 0) then
+        inventory.lanternTimer = inventory.lanternTimer - 1
+        if (inventory.lanternTimer == 0) then
+            messageBox.open({"Your LANTERN has died."})
+        end
+    end
 end
 
 local function addPillar(x1, y1, x2, y2)

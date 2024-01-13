@@ -62,16 +62,20 @@ function castSpell()
     --  fire
     if (spellbook.selected == 3) then
         logEvent("Cast " .. spells[spellbook.selected].name .. " spell")
+        player.mp = player.mp - 8
+        inventory.lanternTimer = 16
     end
 
     --  teleport
     if (spellbook.selected == 4) then
         logEvent("Cast " .. spells[spellbook.selected].name .. " spell")
+        player.mp = player.mp - 8
     end
 
     --  deathspell
     if (spellbook.selected == 5) then
         logEvent("Cast " .. spells[spellbook.selected].name)
+        player.mp = player.mp - 8
     end
 end
 

@@ -105,7 +105,7 @@ end
 function drawDarkness()
     distances = {0, 28, 24, 18, 12, 8} -- indexed by floor
 
-    if (inventory.lantern or currentFloor == 1) then
+    if ((inventory.lantern and inventory.lanternTimer > 0) or currentFloor == 1) then
         return
     end
 

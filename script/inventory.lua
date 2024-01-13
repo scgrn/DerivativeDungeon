@@ -9,6 +9,8 @@ function resetInventory()
         opalEye = false,
         
         amulet = false,
+        
+        lanternTimer = 0,
     }
 end
 

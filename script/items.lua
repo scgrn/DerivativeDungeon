@@ -99,6 +99,7 @@ function placeItems()
         effect = function()
             messageBox.open({"You found a LANTERN to light your way."})
             inventory.lantern = true
+            inventory.lanternTimer = 16
         end,
     })
 
