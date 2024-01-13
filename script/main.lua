@@ -220,6 +220,8 @@ function update()
 
     automap.render()
     
+    spellbook.render()
+    
     if (animating) then
         delay(10);
     else
@@ -228,10 +230,11 @@ function update()
 
         if (showingMap) then
             automap.checkKeypress(ch)
+        elseif (spellbook.showing) then
+            spellbook.checkInput(ch)
         else
             if (messageBox.state == messageBox.States.OPEN) then
                 messageBox.close()
-                showingMap = false
 
                 return
             else
@@ -250,7 +253,7 @@ function update()
 
                 --  open spellbook
                 if (ch == KEY.S) then
-                    openSpellbook()
+                    spellbook.open()
                 end
 
                 --  cast spell

@@ -6,13 +6,20 @@ spells = {
     { name = "DEATHSPELL", spellbook = "Tome of Decimation"},
 }
 
-local selected = 0
+spellbook = {
+    selected = 0,
+    choice = 0,
+    showing = false,
+}
 
 function resetSpellbook()
     for i = 1, #spells do
         spells[i].learned = false
     end
-    selected = 0
+
+    spellbook.selected = 0
+    spellbook.choice = 0
+    spellbook.showing = false
 end
 
 function learnSpell(spell)
@@ -30,19 +37,21 @@ function learnSpell(spell)
 end
 
 function castSpell()
-    if (selected == 0) then
+    if (spellbook.selected == 0) then
         messageBox.open({
             "No spell selected!",
         })
     end
 
     --  shield
-    if (selected == 1) then
+    if (spellbook.selected == 1) then
+        logEvent("Cast " .. spells[spellbook.selected].name .. " spell")
         player.mp = player.mp - 8
     end
 
     --  life
-    if (selected == 2) then
+    if (spellbook.selected == 2) then
+        logEvent("Cast " .. spells[spellbook.selected].name .. " spell")
         player.hp = player.hp + 32
         if (player.hp > player.maxHp) then
             player.hp = player.maxHp
@@ -51,19 +60,22 @@ function castSpell()
     end
 
     --  fire
-    if (selected == 3) then
+    if (spellbook.selected == 3) then
+        logEvent("Cast " .. spells[spellbook.selected].name .. " spell")
     end
 
     --  teleport
-    if (selected == 4) then
+    if (spellbook.selected == 4) then
+        logEvent("Cast " .. spells[spellbook.selected].name .. " spell")
     end
 
     --  deathspell
-    if (selected == 5) then
+    if (spellbook.selected == 5) then
+        logEvent("Cast " .. spells[spellbook.selected].name)
     end
 end
 
-function openSpellbook()
+function spellbook.open()
     local spellsLearned = 0
     for i = 1, #spells do
         if (spells[i].learned) then
@@ -73,13 +85,24 @@ function openSpellbook()
 
     local display = {
         "",
-        "         ~ Spellbook ~         ",
+        "~  Spellbook  ~",
         "",
     }
 
     if (spellsLearned == 0) then
         table.insert(display, "   You haven't learned any spells yet   ")
     else
+        spellbook.showing = true
+        spellbook.choice = spellbook.selected
+        if (spellbook.choice == 0) then
+            for i = 1, #spells do
+                if (spells[i].learned) then
+                    spellbook.choice = i
+                    break
+                end
+            end
+        end
+        
         for i = 1, #spells do
             table.insert(display, "")
             if (spells[i].learned) then
@@ -89,11 +112,61 @@ function openSpellbook()
             end
         end
         table.insert(display, "")
+        table.insert(display, "")
+        table.insert(display, "  Press Enter to select or Esc to cancel  ")
     end
 
     table.insert(display, "")
 
     messageBox.open(display)
+end
+
+function spellbook.render()
+    if (spellbook.showing and messageBox.state == messageBox.States.OPEN) then
+        local y = spellbook.choice * 2 + 6
+        printString(30, y, "►")
+        printString(49, y, "◄")
+    end
+end
+
+function spellbook.checkInput(ch)
+    if (tableContains(KEY.DOWN, ch)) then
+        local okay = false
+        repeat
+            spellbook.choice = spellbook.choice + 1
+            if (spellbook.choice > #spells) then
+                spellbook.choice = 1
+            end
+            if (spells[spellbook.choice].learned) then
+                okay = true
+            end
+        until okay
+    end
+
+    if (tableContains(KEY.UP, ch)) then
+        local okay = false
+        repeat
+            spellbook.choice = spellbook.choice - 1
+            if (spellbook.choice < 1) then
+                spellbook.choice = #spells
+            end
+            if (spells[spellbook.choice].learned) then
+                okay = true
+            end
+        until okay
+    end
+
+    if (ch == KEY.ENTER) then
+        spellbook.selected = spellbook.choice
+
+        messageBox.close()
+        spellbook.showing = false
+    end
+
+    if (ch == 27) then
+        messageBox.close()
+        spellbook.showing = false
+    end
 end
 
 function placeSpellbooks()
