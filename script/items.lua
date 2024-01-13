@@ -46,6 +46,28 @@ function drawItems()
     end
 end
 
+local function placeKey(floor1, floor2, name, callback)
+    local floor
+    if (#dungeon[floor1].deadEnds == 0) then
+        floor = floor2
+    elseif (#dungeon[floor2].deadEnds == 0) then
+        floor = floor1
+    else
+        floor = random(floor1, floor2)
+    end
+    room = table.remove(dungeon[floor].deadEnds)
+    table.insert(dungeon[floor][room.x][room.y].items, {
+        x = 5,
+        y = 5,
+        representation = 'k',
+        effect = function()
+            logEvent("Found key")
+            messageBox.open({"  You found the " .. name .. " KEY  "})
+            callback()
+        end
+    })
+end
+
 function placeItems()
     placeSpellbooks()
     
@@ -65,7 +87,7 @@ function placeItems()
             -- TODO: spawn new monsters
         end,
     })
-    
+
     --  place lantern
     local lanternFloor = random(3, 4)
     room = table.remove(dungeon[lanternFloor].deadEnds)
@@ -158,68 +180,17 @@ function placeItems()
     })
     
     --  place keys
-    local floor
-    if (#dungeon[1].deadEnds == 0) then
-        floor = 2
-    elseif (#dungeon[2].deadEnds == 0) then
-        floor = 1
-    else
-        floor = random(1, 2)
-    end
-    room = table.remove(dungeon[floor].deadEnds)
-    table.insert(dungeon[floor][room.x][room.y].items, {
-        x = 5,
-        y = 5,
-        representation = 'k',
-        effect = function()
-            logEvent("Found key")
-            messageBox.open({"You found the IRON KEY"})
-            inventory.ironKey = true
-        end
-    })
-    logEvent("Key: F" .. floor .. ", (" .. room.x .. "," .. room.y .. ")")
+    placeKey(1, 2, "IRON", function()
+        inventory.ironKey = true
+    end)
+    placeKey(3, 4, "SILVER", function()
+        inventory.silverKey = true
+    end)
+    placeKey(5, 6, "GOLD", function()
+        inventory.goldKey = true
+    end)
 
-    if (#dungeon[3].deadEnds == 0) then
-        floor = 4
-    elseif (#dungeon[4].deadEnds == 0) then
-        floor = 3
-    else
-        floor = random(3, 4)
-    end
-    room = table.remove(dungeon[floor].deadEnds)
-    table.insert(dungeon[floor][room.x][room.y].items, {
-        x = 5,
-        y = 5,
-        representation = 'k',
-        effect = function()
-            logEvent("Found key")
-            messageBox.open({"You found the SILVER KEY"})
-            inventory.silverKey = true
-        end
-    })
-    logEvent("Key: F" .. floor .. ", (" .. room.x .. "," .. room.y .. ")")
-
-    if (#dungeon[5].deadEnds == 0) then
-        floor = 6
-    elseif (#dungeon[6].deadEnds == 0) then
-        floor = 5
-    else
-        floor = random(5, 6)
-    end
-    room = table.remove(dungeon[floor].deadEnds)
-    table.insert(dungeon[floor][room.x][room.y].items, {
-        x = 5,
-        y = 5,
-        representation = 'k',
-        effect = function()
-            logEvent("Found key")
-            messageBox.open({"You found the GOLD KEY"})
-            inventory.goldKey = true
-        end
-    })
-    logEvent("Key: F" .. floor .. ", (" .. room.x .. "," .. room.y .. ")")
-
-    --  collect the remaining dead ends and assign life and magic bonuses
+    --  collect the remaining dead ends and place life and magic bonuses
     local deadEnds = {}
     for floor = 1, FLOORS do
         for _, deadEnd in pairs(dungeon[floor].deadEnds) do
@@ -237,10 +208,10 @@ function placeItems()
         table.insert(dungeon[room.floor][room.x][room.y].items, {
             x = 5,
             y = 5,
-            representation = 'l',
+            representation = 'L',
             effect = function()
                 logEvent("Max HP +16")
-                messageBox.open({"You found a life bonus!"})
+                messageBox.open({"You found a LIFE CONTAINER", "", " Total life capactity increased!"})
                 player.maxHp = player.maxHp + 16
                 player.hp = player.hp + 16
             end
@@ -250,16 +221,14 @@ function placeItems()
         table.insert(dungeon[room.floor][room.x][room.y].items, {
             x = 5,
             y = 5,
-            representation = 'm',
+            representation = 'M',
             effect = function()
                 logEvent("Max MP +16")
-                messageBox.open({"You found a magic bonus!"})
+                messageBox.open({"You found a MAGIC CONTAINER", "", " Total magic capactity increased!"})
                 player.maxMp = player.maxMp + 16
                 player.mp = player.mp + 16
             end
         })
     end
-
-    logEvent("Rem. DeadEnds: " .. #deadEnds)
 end
 
