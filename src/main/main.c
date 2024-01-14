@@ -58,15 +58,6 @@ static int luaPrintString(lua_State* luaVM) {
     return 0;
 }
 
-static int luaPrintChar(lua_State* luaVM) {
-    int x = (int)lua_tonumber(luaVM, 1);
-    int y = (int)lua_tonumber(luaVM, 2);
-    int c = (int)lua_tonumber(luaVM, 3);
-    mvaddch(x, y, (char)c);
-    
-    return 0;
-}
-
 static int luaRectangle(lua_State* luaVM) {
     int x1 = (int)lua_tonumber(luaVM, 1);
     int y1 = (int)lua_tonumber(luaVM, 2);
@@ -292,7 +283,6 @@ int main(int argc, char* argv[]) {
 
     luaL_openlibs(luaVM);
     lua_register(luaVM, "printString", luaPrintString);
-    lua_register(luaVM, "printChar", luaPrintChar);
     lua_register(luaVM, "rectangle", luaRectangle);
     lua_register(luaVM, "setBlockingInput", luaSetBlockingInput);
     lua_register(luaVM, "getch", luaGetch);
