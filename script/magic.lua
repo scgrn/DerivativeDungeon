@@ -70,6 +70,16 @@ function castSpell()
     if (spellbook.selected == 4) then
         logEvent("Cast " .. spells[spellbook.selected].name .. " spell")
         player.mp = player.mp - 8
+        if (currentFloor > 1) then
+            player.roomX = grid.up.x
+            player.roomY = grid.up.y
+        else
+            player.roomX = 3
+            player.roomY = 5
+        end
+        generateRoom(player.roomX, player.roomY)
+        player.pos.x = 5
+        player.pos.y = 6
     end
 
     --  deathspell
