@@ -1,9 +1,40 @@
 spells = {
-    { name = "SHIELD", spellbook = "Tome of Fortitude"},
-    { name = "LIFE", spellbook = "Tome of Healing"},
-    { name = "FIRE", spellbook = "Tome of Pyromancy"},
-    { name = "TELEPORT", spellbook = "Tome of Conveyance"},
-    { name = "DEATHSPELL", spellbook = "Tome of Decimation"},
+    {
+        name = "SHIELD",
+        spellbook = "Tome of Fortitude",
+        cost = {32, 24, 24, 16, 16, 16, 16, 16},
+        effect = function()
+        end
+    },{
+        name = "LIFE",
+        spellbook = "Tome of Healing",
+        cost = {70, 70, 60, 60, 50, 50, 50, 50},
+        effect = function()
+            player.hp = player.hp + 32
+            if (player.hp > player.maxHp) then
+                player.hp = player.maxHp
+            end
+        end
+    },{
+        name = "HASTE",
+        spellbook = "Tome of Conveyance",
+        cost = {80, 80, 60, 30, 16, 16, 16, 16 },
+        effect = function()
+        end
+    },{
+        name = "FIRE",
+        spellbook = "Tome of Pyromancy",
+        cost = {120, 80, 60, 30, 16, 16, 16, 16},
+        effect = function()
+            inventory.lanternTimer = 16
+        end
+    },{
+        name = "DEATHSPELL",
+        spellbook = "Tome of Decimation",
+        cost = {120, 120, 120, 120, 120, 120, 100, 64},
+        effect = function()
+        end
+    },
 }
 
 spellbook = {
@@ -29,6 +60,7 @@ function learnSpell(spell)
         "",
         "You learn " .. spells[spell].name
     }
+    --  avoid saying "DEATHSPELL spell" because that just sounds ridiculous
     if (spell ~= 5) then
         message[3] = message[3] .. " spell"
     end
@@ -41,51 +73,19 @@ function castSpell()
         messageBox.open({
             "No spell selected!",
         })
+        return
     end
 
-    --  shield
-    if (spellbook.selected == 1) then
-        logEvent("Cast " .. spells[spellbook.selected].name .. " spell")
-        player.mp = player.mp - 8
-    end
-
-    --  life
-    if (spellbook.selected == 2) then
-        logEvent("Cast " .. spells[spellbook.selected].name .. " spell")
-        player.hp = player.hp + 32
-        if (player.hp > player.maxHp) then
-            player.hp = player.maxHp
-        end
-        player.mp = player.mp - 8
-    end
-
-    --  fire
-    if (spellbook.selected == 3) then
-        logEvent("Cast " .. spells[spellbook.selected].name .. " spell")
-        player.mp = player.mp - 8
-        inventory.lanternTimer = 16
-    end
-
-    --  teleport
-    if (spellbook.selected == 4) then
-        logEvent("Cast " .. spells[spellbook.selected].name .. " spell")
-        player.mp = player.mp - 8
-        if (currentFloor > 1) then
-            player.roomX = grid.up.x
-            player.roomY = grid.up.y
+    if (player.mp >= spells[spellbook.selected].cost[player.magicLevel]) then
+        if (spellbook.selected == 5) then
+            logEvent("Cast " .. spells[spellbook.selected].name)
         else
-            player.roomX = 3
-            player.roomY = 5
+            logEvent("Cast " .. spells[spellbook.selected].name .. " spell")
         end
-        generateRoom(player.roomX, player.roomY)
-        player.pos.x = 5
-        player.pos.y = 6
-    end
-
-    --  deathspell
-    if (spellbook.selected == 5) then
-        logEvent("Cast " .. spells[spellbook.selected].name)
-        player.mp = player.mp - 8
+        player.mp = player.mp - spells[spellbook.selected].cost[player.magicLevel]
+        spells[spellbook.selected].effect()
+    else
+        logEvent("Not enough magic")
     end
 end
 
