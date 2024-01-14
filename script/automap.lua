@@ -1,4 +1,6 @@
-automap = {}
+automap = {
+    pressed = false
+}
 
 local viewingFloor = 1
 
@@ -53,7 +55,6 @@ end
 
 function automap.open()
     automap.showing = true
-    automap.pressed = false
     viewingFloor = currentFloor
     messageBox.open(generate())
 end

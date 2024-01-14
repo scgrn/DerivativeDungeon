@@ -31,8 +31,6 @@ end
 
 function ascendStairs()
     if (currentFloor > 1) then
-        logEvent("You ascend the stairs...")
-
         currentFloor = currentFloor - 1
         if (currentFloor > deepestFloor) then
             deepestFloor = currentFloor
@@ -43,7 +41,7 @@ function ascendStairs()
         player.roomY = grid.down.y
 
         generateRoom(player.roomX, player.roomY)
-        logEvent(" Floor " .. currentFloor)
+        logEvent("You ascend to floor " .. currentFloor)
     end
 end
 
@@ -51,8 +49,6 @@ end
 
 function descendStairs()
     if (currentFloor < FLOORS) then
-        logEvent("You descend the stairs...")
-
         currentFloor = currentFloor + 1
         grid = dungeon[currentFloor]
 
@@ -64,7 +60,7 @@ function descendStairs()
         player.roomY = grid.up.y
 
         generateRoom(player.roomX, player.roomY)
-        logEvent(" Floor " .. currentFloor)
+        logEvent("You descend to floor " .. currentFloor)
     end
 end
 
