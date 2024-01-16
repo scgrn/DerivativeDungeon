@@ -34,6 +34,7 @@ function init()
     loadScript("../script/inventory.lua")()
     loadScript("../script/eventLog.lua")()
     loadScript("../script/automap.lua")()
+    loadScript("../script/seed.lua")()
 
     randomSeed()
     newGame(random(256 ^ 4 - 1))
@@ -219,8 +220,8 @@ function update()
     messageBox.render()
 
     automap.render()
-    
     spellbook.render()
+    seed.print()
     
     if (animating) then
         delay(10);
@@ -232,6 +233,8 @@ function update()
             automap.checkKeypress(ch)
         elseif (spellbook.showing) then
             spellbook.checkInput(ch)
+        elseif (seed.showing) then
+            seed.checkInput(ch)
         else
             if (messageBox.state == messageBox.States.OPEN) then
                 messageBox.close()
@@ -291,24 +294,11 @@ function update()
                 end
                 
                 if (ch == KEY.V) then
-                    local seed = intToHex(masterSeed)
-                    seed = string.insert(seed, " ", 4)
-                    messageBox.open({
-                        "Current random seed:",
-                        "",
-                        seed,
-                    })
+                    seed.show()
                 end
 
                 if (ch == KEY.E) then
-                    messageBox.open({
-                        "Enter random seed:",
-                        "(this will start a new game)",
-                        "",
-                        "---- ----",
-                        "",
-                        "Press Enter to accept or Esc to cancel"
-                    })
+                    seed.enter()
                 end
 
                 if (tableContains(KEY.Q, ch)) then
