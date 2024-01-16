@@ -30,6 +30,7 @@ void startCurses() {
     noecho();
     cbreak();
     curs_set(0);
+    nodelay(stdscr, true);
     set_escdelay(20);
     keypad(stdscr, TRUE);
 }
@@ -118,11 +119,17 @@ static int luaRectangle(lua_State* luaVM) {
     return 0;
 }
 
-int luaSetBlockingInput(lua_State* luaVM) {
-    bool block = lua_toboolean(luaVM, 1);
-    nodelay(stdscr, !block);
+int luaKbhit(lua_State* luaVM) {
+    int ch = getch();
 
-    return 0;
+    if (ch != ERR) {
+        ungetch(ch);
+        lua_pushboolean(luaVM, true);
+    } else {
+        lua_pushboolean(luaVM, false);
+    }
+
+    return 1;
 }
 
 int luaGetch(lua_State* luaVM) {
@@ -284,7 +291,7 @@ int main(int argc, char* argv[]) {
     luaL_openlibs(luaVM);
     lua_register(luaVM, "printString", luaPrintString);
     lua_register(luaVM, "rectangle", luaRectangle);
-    lua_register(luaVM, "setBlockingInput", luaSetBlockingInput);
+    lua_register(luaVM, "kbhit", luaKbhit);
     lua_register(luaVM, "getch", luaGetch);
     lua_register(luaVM, "delay", luaDelay);
     lua_register(luaVM, "quit", luaQuit);

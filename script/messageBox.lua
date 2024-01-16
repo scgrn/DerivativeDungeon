@@ -36,11 +36,6 @@ function messageBox.setMessage(message)
 end
 
 function messageBox.open(message)
-    --  wait until no keys are being held
-    setBlockingInput(false);
-    while (getch() ~= -1) do end
-    setBlockingInput(true)
-
     messageBox.state = messageBox.States.OPENING
     messageBox.currentSize = 0
     messageBox.setMessage(message)
@@ -55,6 +50,7 @@ function messageBox.update()
         animating = true
         if (messageBox.currentSize == messageBox.maxSize) then
             messageBox.state = messageBox.States.OPEN
+            repeat getch() until not kbhit()
         else
             messageBox.currentSize = messageBox.currentSize + 1
         end

@@ -227,7 +227,10 @@ function update()
         delay(10);
     else
         ch = getch()
-        -- logEvent("Scancode: " .. ch)
+        --logEvent("Scancode: " .. ch)
+        if (ch == -1) then
+            return
+        end
 
         if (automap.showing) then
             automap.checkKeypress(ch)
