@@ -16,8 +16,8 @@ spells = {
             end
         end
     },{
-        name = "HASTE",
-        spellbook = "Tome of Conveyance",
+        name = "STONE",
+        spellbook = "Tome of Petrification",
         cost = {80, 80, 60, 30, 16, 16, 16, 16 },
         effect = function()
         end
