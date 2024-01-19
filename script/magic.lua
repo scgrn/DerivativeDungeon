@@ -20,6 +20,7 @@ spells = {
         spellbook = "Tome of Petrification",
         cost = {80, 80, 60, 30, 16, 16, 16, 16 },
         effect = function()
+            stoneCountdownTimer = 16
         end
     },{
         name = "FIRE",
@@ -99,7 +100,7 @@ function spellbook.open()
 
     local display = {
         "",
-        "~ ~  Spellbook  ~ ~",
+        "~ ~ ~  Spellbook  ~ ~ ~",
         "",
     }
 
@@ -120,14 +121,19 @@ function spellbook.open()
         for i = 1, #spells do
             table.insert(display, "")
             if (spells[i].learned) then
-                table.insert(display, spells[i].name)
+                local str = spells[i].name .. " "
+                local mp = " " .. spells[i].cost[player.magicLevel]
+                str = "  " .. str .. string.rep(".", 19 - (#str + #mp)) .. mp
+                table.insert(display, str)
             else
-                table.insert(display, "--------")
+                table.insert(display, "  " .. string.rep(".", 19))
             end
         end
         table.insert(display, "")
         table.insert(display, "")
-        table.insert(display, "  Press Enter to select or Esc to cancel  ")
+        table.insert(display, "   Press Enter to select or Esc to cancel   ")
+        table.insert(display, "")
+        table.insert(display, "  After selecting spell, press [C] to cast  ")
     end
 
     table.insert(display, "")
@@ -137,9 +143,8 @@ end
 
 function spellbook.render()
     if (spellbook.showing and messageBox.state == messageBox.States.OPEN) then
-        local y = spellbook.choice * 2 + 6
-        printString(31, y, "►")
-        printString(48, y, "◄")
+        local y = spellbook.choice * 2 + 5
+        printString(28, y, "►")
     end
 end
 
