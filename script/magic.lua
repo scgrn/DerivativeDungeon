@@ -29,7 +29,7 @@ spells = {
         effect = function()
             if (inventory.lantern) then
                 inventory.lanternTimer = 16
-                logEvent("Your LANTERN is relit")
+                logEvent("The LANTERN has been relit")
             end
         end
     },{
