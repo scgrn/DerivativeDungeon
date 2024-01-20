@@ -16,9 +16,9 @@ function resetPlayer()
         maxMp = 64,
 
         exp = 0,
-        nextLife = {50, 150, 400, 800, 1500, 2500, 4000},
-        nextMagic = {100, 300, 700, 1200, 2200, 3500, 6000},
-        nextAttack = {200, 500, 1000, 2000, 3000, 5000, 8000},
+        nextLife = {50, 150, 400, 800, 1500, 2500, 4000, 9000},
+        nextMagic = {100, 300, 700, 1200, 2200, 3500, 6000, 9000},
+        nextAttack = {200, 500, 1000, 2000, 3000, 5000, 8000, 9000},
 
         damage = {8, 12, 16, 24, 32, 48, 64, 96},
 
@@ -61,6 +61,15 @@ function descendStairs()
 
         generateRoom(player.roomX, player.roomY)
         logEvent("You descend to floor " .. currentFloor)
+    end
+end
+
+function addEXP(amount)
+    logEvent(" +" .. amount .. " EXP")
+    
+    player.exp = player.exp + amount
+    if (player.exp >= player.next) then
+        levelUp.open()
     end
 end
 
@@ -156,10 +165,8 @@ function movePlayer(ch)
             value.hp = value.hp - player.damage[player.attackLevel]
             if (value.hp <= 0) then
                 table.remove(monsters, key)
-                logEvent("You defeated the bat!")   
-                logEvent(" +" .. value.exp .. " EXP")
-                
-                player.exp = player.exp + value.exp
+                logEvent("You defeated the bat!")
+                addEXP(value.exp)
             else
                 logEvent("You attacked the bat")
             end

@@ -50,7 +50,7 @@ function messageBox.update()
         animating = true
         if (messageBox.currentSize == messageBox.maxSize) then
             messageBox.state = messageBox.States.OPEN
-            repeat getch() until not kbhit()
+            -- repeat getch() until not kbhit()
         else
             messageBox.currentSize = messageBox.currentSize + 1
         end

@@ -34,6 +34,7 @@ function init()
     loadScript("../script/inventory.lua")()
     loadScript("../script/eventLog.lua")()
     loadScript("../script/automap.lua")()
+    loadScript("../script/levelUp.lua")()
     loadScript("../script/seed.lua")()
 
     randomSeed()
@@ -221,6 +222,7 @@ function update()
 
     automap.render()
     spellbook.render()
+    levelUp.render()
     seed.print()
     
     if (animating) then
@@ -238,6 +240,8 @@ function update()
             spellbook.checkInput(ch)
         elseif (seed.showing) then
             seed.checkInput(ch)
+        elseif (levelUp.showing) then
+            levelUp.checkInput(ch)
         else
             if (messageBox.state == messageBox.States.OPEN) then
                 messageBox.close()
