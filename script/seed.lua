@@ -53,7 +53,7 @@ function seed.checkInput(ch)
         end
     end
     
-    if (ch == 8 and #newSeed > 0) then
+    if ((ch == 8 or ch == 263) and #newSeed > 0) then
         newSeed = string.sub(newSeed, 1, #newSeed - 1)
     end
     

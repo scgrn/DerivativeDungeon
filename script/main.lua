@@ -226,8 +226,9 @@ function update()
     seed.print()
     
     if (animating) then
-        delay(10);
+        delay(10)
     else
+        delay(1)
         ch = getch()
         --logEvent("Scancode: " .. ch)
         if (ch == -1) then
