@@ -27,7 +27,10 @@ spells = {
         spellbook = "Tome of Pyromancy",
         cost = {120, 80, 60, 30, 16, 16, 16, 16},
         effect = function()
-            inventory.lanternTimer = 16
+            if (inventory.lantern) then
+                inventory.lanternTimer = 16
+                logEvent("Your LANTERN is relit")
+            end
         end
     },{
         name = "DEATHSPELL",

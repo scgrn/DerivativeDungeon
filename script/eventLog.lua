@@ -10,13 +10,6 @@ function clearEventLog()
 end
 
 function drawEventLog()
-    --[[
-    printString(4, 15, "Player HP -3")
-    printString(4, 16, "Enemy HP -3")
-    printString(4, 17, "Player defeated Enemy")
-    printString(4, 18, "Player EXP +10")
-    printString(4, 19, "")
-    ]]
     for i = 1, 5 do
         printString(4, 14 + i, eventLog[i])
     end
