@@ -28,6 +28,7 @@ function init()
     loadScript("../script/items.lua")()
     loadScript("../script/generator.lua")()
     loadScript("../script/pathFinder.lua")()
+    loadScript("../script/lineOfSight.lua")()
     loadScript("../script/player.lua")()
     loadScript("../script/monsters.lua")()
     loadScript("../script/magic.lua")()
@@ -230,10 +231,10 @@ function update()
     else
         delay(1)
         ch = getch()
-        --logEvent("Scancode: " .. ch)
         if (ch == -1) then
             return
         end
+        --logEvent("Scancode: " .. ch)
 
         if (automap.showing) then
             automap.checkKeypress(ch)
