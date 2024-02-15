@@ -55,6 +55,7 @@ function resetSpellbook()
     spellbook.selected = 0
     spellbook.choice = 0
     spellbook.showing = false
+    spellbook.playerHasCast = false
 end
 
 function learnSpell(spell)
@@ -88,6 +89,7 @@ function castSpell()
         end
         player.mp = player.mp - spells[spellbook.selected].cost[player.magicLevel]
         spells[spellbook.selected].effect()
+        spellbook.playerHasCast = true
     else
         logEvent("Not enough magic")
     end
@@ -135,8 +137,11 @@ function spellbook.open()
         table.insert(display, "")
         table.insert(display, "")
         table.insert(display, "   Press Enter to select or Esc to cancel   ")
-        table.insert(display, "")
-        table.insert(display, "  After selecting spell, press [C] to cast  ")
+        --  TODO: only display this if player hasn't cast a spell yet
+        if not spellbook.playerHasCast then
+            table.insert(display, "")
+            table.insert(display, "  After selecting spell, press [C] to cast  ")
+        end
     end
 
     table.insert(display, "")
