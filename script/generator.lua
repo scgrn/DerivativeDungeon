@@ -392,13 +392,9 @@ function generateRoom(x, y)
             if (random() < 0.65 or (xs == 3 and ys == 3)) then
                 if ((player.roomX == 2 or player.roomX == 4) and (player.roomY == 2 or player.roomY == 4)) then
                     --  center pillar
-
-                    --  (as long as we're not in the first room)
-                    if (player.roomX ~= 3 or player.roomY ~= 5) then
-                        xs = random(1, xs - 1)
-                        ys = random(1, ys - 1)
-                        addPillar(5 - xs, 5 - ys, 5 + xs, 5 + ys)
-                    end
+                    xs = random(1, xs - 1)
+                    ys = random(1, ys - 1)
+                    addPillar(5 - xs, 5 - ys, 5 + xs, 5 + ys)
                 else
                     --  two or four pillars
                     local xPillars = false
@@ -476,8 +472,6 @@ function generateRoom(x, y)
         room.gate.y1 = 10
         room.gate.y2 = 14
     end
-    
-    room.gateMessageShown = false
 
     marchSquares()
 
