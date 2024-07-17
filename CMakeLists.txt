@@ -27,7 +27,7 @@ add_executable(${PROJECT_NAME}
     "${LUA_SOURCE}"
 )
 
-target_compile_options(${PROJECT_NAME} PRIVATE -finput-charset=UTF-8 -DNCURSES_WIDECHAR)
+target_compile_options(${PROJECT_NAME} PRIVATE -finput-charset=UTF-8 -DNCURSES_WIDECHAR -DLUA_USE_POSIX)
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC "${PROJECT_SOURCE_DIR}/src/main"
