@@ -9,7 +9,7 @@
 #include <ncursesw/ncurses.h>
 #include <windows.h>
 #else
-#include "ncurses.h"
+#include "ncursesw/ncurses.h"
 #endif
 
 #include "random.h"
