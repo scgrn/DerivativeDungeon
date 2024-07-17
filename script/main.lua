@@ -23,20 +23,26 @@ KEY = {
 function init()
     loadScript("../script/buildstamp.lua")()
     loadScript("../script/utils.lua")()
-    loadScript("../script/dialogues/messageBox.lua")()
     loadScript("../script/tiles.lua")()
     loadScript("../script/items.lua")()
     loadScript("../script/generator.lua")()
-    loadScript("../script/aiServices/pathFinder.lua")()
-    loadScript("../script/aiServices/lineOfSight.lua")()
-    loadScript("../script/entities/player.lua")()
-    loadScript("../script/entities/monsters.lua")()
     loadScript("../script/magic.lua")()
     loadScript("../script/inventory.lua")()
-    loadScript("../script/eventLog.lua")()
-    loadScript("../script/automap.lua")()
+
+    loadScript("../script/dialogues/messageBox.lua")()
+    loadScript("../script/dialogues/help.lua")()
+    loadScript("../script/dialogues/about.lua")()
+    loadScript("../script/dialogues/automap.lua")()
     loadScript("../script/dialogues/levelUp.lua")()
-    loadScript("../script/seed.lua")()
+    loadScript("../script/dialogues/eventLog.lua")()
+    loadScript("../script/dialogues/seed.lua")()
+
+    loadScript("../script/aiServices/pathFinder.lua")()
+    loadScript("../script/aiServices/lineOfSight.lua")()
+
+    loadScript("../script/entities/entityManager.lua")()
+    loadScript("../script/entities/player.lua")()
+    loadScript("../script/entities/monsters.lua")()
 
     randomSeed()
     newGame(random(256 ^ 4 - 1))
@@ -189,30 +195,6 @@ function drawScreen()
     rectangle(33, 1, 77, 23)
 end
 
-function showHelp()
-    messageBox.open({
-        "Use the arrow keys to move. To attack",
-        "a monster, just like, bump into it.",
-        "",
-        "Other commands:                            ",
-        "",
-        "   [M] - View map         [R] Restart      ",
-        "   [I] - View inventory   [E] Enter seed   ",
-        "   [S] - Open spellbook   [V] View seed    ",
-        "   [C] - Cast spell       [A] About        ",
-        "                          [Q] Quit         ",
-        "Legend:                                    ",
-        "",
-        "   @ - You                 l - Life bonus  ",
-        "   B - Giant Bat           m - Magic bonus ",
-        "   Z - Zombie              e - EXP bonus   ",
-        "   S - Skeleton Archer     k - Key         ",
-        "   W - Wraith              s - Spellbook   ",
-        "",
-        "Press any key"
-    })
-end
-
 function update()
     local ch = 0
     animating = false
@@ -287,19 +269,7 @@ function update()
                 end
 
                 if (ch == KEY.A) then
-                    messageBox.open({
-                        "Derivative Dungeon",
-                        "",
-                        "(c) Copyright 2024 Andrew Krause",
-                        "alienbug.games",
-                        "",
-                        "Source available at:",
-                        "  https://github.com/scgrn/DerivativeDungeon  ",
-                        "",
-                        "Buildstamp: " .. buildstamp,
-                        "",
-                        "Press any key"
-                    })
+                    showAbout()
                 end
                 
                 if (ch == KEY.V) then
