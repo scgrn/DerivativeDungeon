@@ -137,7 +137,7 @@ function spellbook.open()
         table.insert(display, "")
         table.insert(display, "")
         table.insert(display, "   Press Enter to select or Esc to cancel   ")
-        --  TODO: only display this if player hasn't cast a spell yet
+        
         if not spellbook.playerHasCast then
             table.insert(display, "")
             table.insert(display, "  After selecting spell, press [C] to cast  ")
@@ -152,6 +152,9 @@ end
 function spellbook.render()
     if (spellbook.showing and messageBox.state == messageBox.States.OPEN) then
         local y = spellbook.choice * 2 + 5
+        if (spellbook.playerHasCast) then
+            y = y + 1
+        end
         printString(28, y, "►")
     end
 end
