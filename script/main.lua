@@ -228,7 +228,9 @@ function update()
             levelUp.checkInput(ch)
         else
             if (messageBox.state == messageBox.States.OPEN) then
-                messageBox.close()
+                if (ch == KEY.ENTER) then
+                    messageBox.close()
+                end
 
                 return
             else

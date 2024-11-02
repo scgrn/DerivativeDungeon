@@ -18,7 +18,7 @@ function showHelp()
         "   S - Skeleton Archer     k - Key         ",
         "   W - Wraith              s - Spellbook   ",
         "",
-        "Press any key"
+        "Press Enter to close"
     })
 end
 

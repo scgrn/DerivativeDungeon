@@ -11,6 +11,8 @@ function seed.show()
         "Current random seed:",
         "",
         seed,
+        "",
+        "Press Enter to close",
     })
 end
 

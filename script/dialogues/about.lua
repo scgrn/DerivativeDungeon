@@ -10,7 +10,7 @@ function showAbout()
         "",
         "Buildstamp: " .. buildstamp,
         "",
-        "Press any key"
+        "Press Enter to close"
     })
 end
 
